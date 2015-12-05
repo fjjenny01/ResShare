@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="css/bootstrap.css" media="screen">
-    <link rel="stylesheet" href="css/custom.min.css">
+    <link rel="stylesheet" href="css/custom_c.min.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
@@ -77,11 +77,43 @@
 
 				<div class="affix leftbound">
 					<img class="img-responsive img-circle" src="img/default_profile.jpg" >
-					<h3 id="name">Name <img class="img-hover pull-right" src="img/gear39.png" data-toggle="modal" data-target="#myModal"></h3>
+
+					<h3 id="name">Name <img class="img-hover pull-right" src="img/gear39.png" data-toggle="modal" data-target="#myModal" onclick="feedDataModal()"></h3>
 					<h6 class="divider"></h6>
-					<h5 id="email"><img src="img/mail4.png"> abc@example.com</h5>
+					<table class="table table-striped table-hover ">
+						<tbody>
+							<tr>
+								<td><h3>Name</h3></td>
+								<td><img class="img-hover pull-right" src="img/gear39.png" data-toggle="modal" data-target="#myModal" onclick="feedDataModal()"></td>
+							</tr>
+							<tr>
+								<td><img src="img/mail4.png"><td>
+								<td id="email">abc@example.com</td>
+							</tr>
+							<tr>
+								<td><img src="img/pin56.png"><td>
+								<td id="loc">New York, NY</td>
+							</tr>
+							<tr>
+								<td><img src="img/graduation-cap2.png"><td>
+								<td id="loc">Columbia University</td>
+							</tr>
+							
+						</tbody>
+					</table>
+				<!--
+					<div class="row">
+						<div class="col-lg-1">
+							<img src="img/mail4.png">
+						</div>
+						<div class="col-lg-10">
+							<p id="email"> abc@example.com</p>
+						</div>
+					</div>	
 					<h5 id="loc"><img src="img/pin56.png"> New York, NY</h4>
 					<h5 id="edu"><img src="img/graduation-cap2.png"> Columbia University</h4>
+					<div id="show"></div>
+				-->
 				</div>
 				
 			</div>
@@ -143,22 +175,34 @@
 				        <h4 class="modal-title" id="myModalLabel">Edit Profile</h4>
 				      </div>
 				      <div class="modal-body" id="profile-form">
+				      	<!--
 				        <div class="form-group">
 						  <label class="control-label" for="disabledInput">Email</label>
-						  <input class="form-control" id="disabledInput" type="text" placeholder="abc@example.com" disabled="">
+						  <input class="form-control" id="disabledInput" type="text" placeholder="" disabled="">
 						</div>
+						
 						<div class="form-group">
 						  <label class="control-label" for="focusedInput">Name</label>
-						  <input class="form-control" id="set-name" type="text" value="Name">
+						  <input class="form-control" id="set-name" type="text" value="">
 						</div>
 						<div class="form-group">
 						  <label class="control-label" for="focusedInput">Education</label>
-						  <input class="form-control" id="set-edu" type="text" value="Columbia University">
+						  <input class="form-control" id="set-edu" type="text" value="">
 						</div>
 						<div class="form-group">
 						  <label class="control-label" for="focusedInput">Location</label>
-						  <input class="form-control" id="set-loc" type="text" value="New York">
+						  <input class="form-control" id="set-loc" type="text" value="">
 						</div>
+					
+						<div class="form-group" id="int-f-cb">
+				          <label class="control-label" for="focusedInput">Intersted Field</label>
+				          
+				        </div>
+						
+						<div class="form-group">
+							<input type="file" id="upload" size="chars"> 
+						</div>
+					-->
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

@@ -4,17 +4,16 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var csrf = require('csurf');
-var mongoose = require('mongoose');
-var session = require('client-sessions');
-var middleware = require('./middleware/simpleAuth');
-var userUrl = 'mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare';
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+
+
+
 var app = express();
-mongoose.connect(userUrl);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,15 +26,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-    cookieName: 'session',
-    secret: 'ashljskaa',
-    duration: 30 * 60 * 1000,
-    activeDuration: 5 * 60 * 1000
-}));
-
-//app.use(csrf());
-app.use(middleware.simpleAuth);
 
 app.use('/', routes);
 app.use('/users', users);
@@ -70,7 +60,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 
 

@@ -76,12 +76,12 @@ function selectResume(){
   alert("call select")
   var updateBtn = document.getElementById("delete_resume");
   var deleteBtn = document.getElementById("update_resume");
-  if (deleteBtn.isDisabled){
-    alert("dis");
+  if (!deleteBtn.isDisabled){
+    alert("!dis");
     deleteBtn.disabled = false;
   }
-  if (updateBtn.isDisabled) {
-    alert("dis");
+  if (!updateBtn.isDisabled) {
+    alert("!dis");
     updateBtn.disabled = false;
   }
 

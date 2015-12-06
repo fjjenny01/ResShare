@@ -247,7 +247,7 @@ var uploadResumeParams = {
 
 var doc = 1;
 
-router.post('/user/profile/resume/upload', tokenAuth.requireToken, function (req, res, next) {
+router.post('/user/profile/resume/upload', function (req, res, next) {
     var b64string = req.body.file;
     uploadResumeParams.key = doc + ".pdf";
     doc++;
@@ -255,21 +255,23 @@ router.post('/user/profile/resume/upload', tokenAuth.requireToken, function (req
     s3.upload(uploadResumeParams, function (err, data) {
         if (err) throw err;
         else {
-            req.user.resume.push([data.Location, uploadResumeParams.key]);
-            User.update({email: req.user.email}, {$set: {resume: req.user.resume}}, function (err, result) {
-                if (err) throw err;
-                else {
-                    res.send(req.user);
-                    res.render('/user/profile/resume');
-                }
-            })
+            User.findOne({email: "jingxiaogu1992@gmail.com"},function(err, user) {
+                req.user = user;
+                req.user.resume.push([data.Location, uploadResumeParams.key]);
+                User.update({email: req.user.email}, {$set: {resume: req.user.resume}}, function (err, result) {
+                    if (err) throw err;
+                    else {
+                        res.send(req.user);
+                        res.render('myresume');
+                    }
+                })
+            });
         }
     });
 });
 
-router.get('/user/profile/resume', tokenAuth.requireToken, function (req, res, nex) {
-    res.send(req.user);
-    res.render('/user/profile/resume');
+router.get('/user/profile/resume', function (req, res, nex) {
+    res.render('myresume');
 });
 
 

@@ -27,7 +27,7 @@ function uploadResume(){
   var cell2 = row.insertCell(1);
 
   cell1.innerHTML = "1";
-  cell2.innerHTML = "NEW CELL2";
+  cell2.innerHTML = "fileName";
 
 
   for (var i = 0, row; row = table.rows[i]; i++) {
@@ -58,9 +58,12 @@ function updateTable(){
 
 //document.getElementById("organigram-iFrame").onmousedown = disable();
 
-function deleteResume() {
+function deleteResume(id) {
 
   alert("delete resume to do!");
+
+  var updateBtn = document.getElementById(id);
+
 
 }
 

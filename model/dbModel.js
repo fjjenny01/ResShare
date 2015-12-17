@@ -5,9 +5,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var redis = require('redis');
 
-//connect to userDB
-var userUrl = 'mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare';
-mongoose.connect(userUrl, function() {
+//connect to DB
+var dbUrl = 'mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare';
+mongoose.connect(dbUrl, function() {
     console.log('db connected');
 });
 
@@ -22,15 +22,30 @@ client.on('connect', function() {
 });
 
 module.exports.user = mongoose.model('user', new Schema({
+    username: String,
     firstname: String,
     lastname: String,
+    uid: String,
     email: {type: String, unique: true},
     password: String,
     status: Number, //0: unactivated, 1: activated
     company: String,
     interested_field: [String],
-    resume: [[String]],
-    avatar: String
+    avatar: {url: String, aid: String}
 }));
+
+
+module.exports.resume = mongoose.model('resume', new Schema({
+    uid: String,
+    username: String,
+    avatar: {url: String, aid: String},
+    rid: String,
+    url: String,
+    subject: String,
+    content: String,
+    tag: [String],
+    status: Number,
+    comments: [{uid: String, comment: String}]
+}).index({username: "text", subject: "text", tag: "text"}));
 
 module.exports.redisClient = client;

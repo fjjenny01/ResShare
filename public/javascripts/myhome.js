@@ -21,26 +21,63 @@ dataType: "json",
 success: function (data) {
     //alert(data);
     user_data = data["user"];
-	//console.log(data);
 	console.log(user_data);
     res_list = data["resume"];
+	console.log(res_list);
 	loadProfile(user_data);
+	loadEvents(res_list);
 }
 });
-console.log(user_data);
 
 
 //loadEvents(res_list);
 function loadEvents(res_list){
 	var mp = document.getElementById("main-panel");
-	var div = document.createElement("div");
-	var imgd = document.createElement("div");
-	var content
+	mp.innerHTML = "";
+	for (var i = 0; i < res_list.length; i++){
+		var div = document.createElement("div");
+		var imgd = document.createElement("div");
+		var cttd = document.createElement("div");
+		imgd.className = "col-lg-2";
+		cttd.className = "col-lg-10";
+		var img = document.createElement("img");
+		img.className = "img-responsive img-circle";
+		img.src = res_list[i]["avatar"]["url"];
+		var fstLine = document.createElement("div");
+		var usr = document.createElement("h5");
+		usr.innerText = res_list[i]["username"];
+		//fstLine.appendChild(usr);
+		for (var j = 0; j < res_list[i]["tag"].length; j++){
+			var sp = document.createElement("span");
+			sp.className = "label label-info margin-tag pull-right";
+			sp.innerText = res_list[i]["tag"][j];
+			usr.appendChild(sp);
+		}
+		var asub = document.createElement("a");
+		asub.href = "http://"+res_list[i]["link"];
+		var sub = document.createElement("h4");
+		sub.innerText = res_list[i]["subject"];
+		sub.className = "text-info";
+		var content = document.createElement("p");
+		content.innerText = res_list[i]["content"];
+		var dvd = document.createElement("div");
+		dvd.className = "divider";
+		imgd.appendChild(img);
+		asub.appendChild(sub);
+		cttd.appendChild(asub);
+		cttd.appendChild(usr);
+		cttd.appendChild(content);
+		div.appendChild(imgd);
+		div.appendChild(cttd);
+		div.appendChild(dvd);
+		mp.appendChild(div);
+	}
+
 }
 function loadProfile(user_data){
 	var prof_tb = document.getElementById("prof_tb");
 	console.log(user_data);
-	console.log(user_data["firstname"]);
+	document.getElementById("prof_img").src = user_data["avatar"]["url"];
 	document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
 	for (var i = 0; i < prof_fields.length; ++i){
 		var tr = document.createElement("tr");
@@ -62,7 +99,7 @@ function loadProfile(user_data){
 	for (var j = 0; j < user_data["interested_field"].length; ++j){
 		var sp = document.createElement("span");
 		sp.className = "label label-primary margin-tag";
-		sp.innerText = int_fields[j];
+		sp.innerText = user_data["interested_field"][j];
 		cnt = cnt+1;
 		if (cnt%2 == 1){
 			div = document.createElement("div");
@@ -116,6 +153,8 @@ function loadProfile(user_data){
 	}
 	*/
 }
+
+
 function feedDataModal(){
 	var fbd = document.getElementById("profile-form");
 	fbd.innerHTML = "";

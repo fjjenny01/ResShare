@@ -5,36 +5,43 @@ var bucket = new AWS.S3({params: {Bucket: 'czcbucket'}});
 console.log(bucket);
 bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
 */
-var user_data = {};
-var res_list = [];
 
+var img_dir = "images/"
+var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
+var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
+
+//user_data = {"username":"chaozc", "first name":"Zichen", "lastname":"Chao", "email":"zichen.chao@columbia.edu", "status":1, "company":"Columbia University", "interested_field":["Software Development", "IEOR", "Consulting", "Education"], "avatar":{"url":"../public/images/default_profile.jpg", "aid":""}};
+res_list = [{"username":"jingxiao", "link":"www.google.com", "subject":"HelloHello", "content":"Hi, would you please check my resume?? ...........................................Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??","tag":int_fields}]
+var prof_fields = ["email", "company"];
+var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
 $.ajax({
 url: "/user/data",
 type: "GET",
 dataType: "json",
 success: function (data) {
-    alert(data);
+    //alert(data);
     user_data = data["user"];
+	//console.log(data);
+	console.log(user_data);
     res_list = data["resume"];
+	loadProfile(user_data);
 }
 });
+console.log(user_data);
 
-var img_dir = "../public/images/"
-var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
-var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
 
-user_data = {"username":"chaozc", "first name":"Zichen", "lastname":"Chao", "email":"zichen.chao@columbia.edu", "status":1, "company":"Columbia University", "interested_field":["Software Development", "IEOR", "Consulting", "Education"], "avatar":{"url":"../public/images/default_profile.jpg", "aid":""}};
-res_list = [{"username":"jingxiao", "link":"www.google.com", "subject":"HelloHello", "content":"Hi, would you please check my resume?? ...........................................Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??","tag":int_fields}]
-var prof_fields = ["email", "company"];
-var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
-loadProfile(user_data);
-loadEvents(res_list);
+//loadEvents(res_list);
 function loadEvents(res_list){
-
+	var mp = document.getElementById("main-panel");
+	var div = document.createElement("div");
+	var imgd = document.createElement("div");
+	var content
 }
 function loadProfile(user_data){
 	var prof_tb = document.getElementById("prof_tb");
-	document.getElementById("name").innerHTML = user_data["first name"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
+	console.log(user_data);
+	console.log(user_data["firstname"]);
+	document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
 	for (var i = 0; i < prof_fields.length; ++i){
 		var tr = document.createElement("tr");
 		var td = document.createElement("td");

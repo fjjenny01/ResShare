@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../public/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="../public/stylesheets/custom_c.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="../public/javascripts/bootstrap.min.js"></script>
+    <script src="../public/javascripts/myresume.js" ></script>
+
+    <!--comment plugins starts here!!!!-->
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="../public/stylesheets/jquery-comments.css">
+
+    <!-- Data -->
+    <script type="text/javascript" src="../public/javascripts/comments-data.js"></script>
+
+    <!-- Libraries -->
+    <script type="text/javascript" src="../public/javascripts/jquery-comments.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $('#comments-container').comments({
+                profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
+                roundProfilePictures: true,
+                textareaRows: 1,
+                getComments: function(success, error) {
+                    setTimeout(function() {
+                        success(commentsArray);
+                    }, 500);
+                },
+                putComment: function(data, success, error) {
+                    setTimeout(function() {
+                        success(data);
+                    }, 200)
+                },
+                deleteComment: function(data, success, error) {
+                    setTimeout(function() {
+                        success();
+                    }, 200)
+                },
+                upvoteComment: function(data, success, error) {
+                    setTimeout(function() {
+                        success(data);
+                    }, 200)
+                }
+            });
+        });
+    </script>
+
+
+
+</head>
+<body>
+
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="../" class="navbar-brand">ResShare</a>
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="">Resumes</a>
+                </li>
+                <li>
+                    <a href="">Function 2</a>
+                </li>
+                <li>
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search Resume">
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="">XX's HomePage</a>
+                </li>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">Mailbox <span class="badge">3</span></a>
+                    <ul class="dropdown-menu" aria-labelledby="download">
+                        <li><a href=""> System <span class="badge">2</span></a></li>
+                        <li class="divider"></li>
+                        <li><a href=""> Request <span class="badge">1</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="bs-docs-section">
+
+        <div class="col-xs-7">
+
+
+            <iframe id="organigram-iFrame" src="http://docs.google.com/gview?url=https://s3.amazonaws.com/resumefiles/resume_JINFANG.pdf&embedded=true" onmousedown="return false;" onselectstart="return false;"
+                    style="width:650px; height:900px;" frameborder="0"></iframe>
+
+        </div>
+
+        <div class="col-xs-5">
+
+            <div id="comments-container"></div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+</body>
+</html>

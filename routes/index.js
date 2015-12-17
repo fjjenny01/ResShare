@@ -13,7 +13,7 @@ var tokenExpire = 60 * 60 * 24;
 var actionExpire = 60 * 15;
 
 aws.config.loadFromPath('./config/awsconfig.json');
-
+console.log(aws.config);
 // Instantiate SES.
 var ses = new aws.SES();
 var emailParams = {
@@ -242,18 +242,23 @@ var uploadAvatarParams = {
 var uploadResumeParams = {
     Bucket: "reshare/resume",
     Key: "",
-    Body: ""
+    Body: "",
+    ACL: "public-read"
 };
 
 var doc = 1;
 
 router.post('/user/profile/resume/upload', function (req, res, next) {
     var b64string = req.body.file;
-    uploadResumeParams.key = doc + ".pdf";
+    uploadResumeParams.Key = doc + ".pdf";
     doc++;
     uploadResumeParams.Body = new Buffer(b64string, 'base64');
+    console.log(uploadResumeParams);
     s3.upload(uploadResumeParams, function (err, data) {
-        if (err) throw err;
+        if (err) {
+            console.log("b");
+            console.log(err);
+        }
         else {
             User.findOne({email: "jingxiaogu1992@gmail.com"},function(err, user) {
                 req.user = user;

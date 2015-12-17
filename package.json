@@ -13,13 +13,12 @@
     "express": "~4.13.1",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "bcryptjs": "~2.0.2",
-    "mongoose": "~4.0.0",
+    "bcryptjs": "latest",
+    "mongoose": "latest",
+    "mongoskin": "latest",
     "email-existence": "latest",
     "aws-sdk": "latest",
     "redis": "latest",
-    "node-uuid": "latest",
-    "querystring": "latest",
-    "fs": "latest"
+    "node-uuid": "latest"
   }
 }

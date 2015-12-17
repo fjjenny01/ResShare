@@ -29,6 +29,18 @@ success: function (data) {
 }
 });
 
+function search(){
+	var input = document.getElementById("searchInput").value.split(" ").join("+");
+	$.ajax({
+		url: "/user/search/?kw="+input,
+		type: "POST",
+		dataType: "json",
+		success: function (data) {
+			res_list = data;
+			loadEvents(res_list);
+		}
+	});
+}
 
 //loadEvents(res_list);
 function loadEvents(res_list){
@@ -172,7 +184,7 @@ function feedDataModal(){
 				var cb = document.createElement("input");
 				cb.type = "checkbox";
 				cb.id = int_fields[i];
-				cbd.appendChild(cb)
+				cbd.appendChild(cb);
 				cbd.innerHTML = cbd.innerHTML+" "+int_fields[i]
 				fd.appendChild(cbd);
 			}

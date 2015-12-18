@@ -15,8 +15,10 @@ var actionExpire = 60 * 15;
 
 aws.config.loadFromPath('./config/awsconfig.json');
 
-// Instantiate SES.
+// Instantiate SES, SQS.
 var ses = new aws.SES();
+var sqs = new aws.SQS();
+
 var emailParams = {
     Destination: {ToAddresses: []},
     Message: {Body: {Text: {Data: ''}}, Subject: {Data: ''}},
@@ -30,6 +32,35 @@ var sendMail = function(emailParams) {
 };
 
 
+var sqsCreateParams = {
+    QueueName: ""
+};
+
+var createQueue = function (sqsCreateParams) {
+    sqs.createQueue(sqsCreateParams, function (err, data) {
+        if (err) throw err;
+    });
+};
+
+
+var sendMessageToQueue = function (sqsGetParams, sqsSendParams, author_id, reviewer_id, reviewee_id, subject, link) {
+    sqs.getQueueUrl(sqsGetParams, function(err, data) {
+        if (err) throw err;
+        sqsSendParams.QueueUrl = data.QueueUrl;
+        var obj = {
+            author: author_id,
+            reviewer: reviewer_id,
+            reviewee: reviewee_id,
+            subject: subject,
+            link: link
+        };
+        sqsSendParams.MessageBody = JSON.stringify(obj);
+        sqs.sendMessage(sqsSendParams, function (err, data) {
+            if (err) throw err;
+        });
+    });
+};
+
 /************************* Home Page *******************************/
 
 router.get('/verify', function (req, res, next) {
@@ -38,10 +69,14 @@ router.get('/verify', function (req, res, next) {
         if (reply) {
             User.update({uid: reply}, {$set:{status: 1}}, function(err, result) {
                 if (err) res.send("internal err");
-                else res.send("Your account has been activated");
-            });
-            redisClient.del(token, function(err, res) {
-                if (err) console.log(err);
+                else {
+                    sqsCreateParams.QueueName = reply;
+                    createQueue(sqsCreateParams);
+                    res.send("Your account has been activated");
+                    redisClient.del(token, function(err, res) {
+                        if (err) console.log(err);
+                    });
+                }
             });
         }
         else {
@@ -162,11 +197,10 @@ router.post('/login', function(req, res) {
         else {
             if (user.status == 0) res.send("Your account has not been activated, please go to activate your account");
             else if (bcrypt.compareSync(req.body.password, user.password)) {
-                res.send("allow login");
                 var token = uuid.v1();
                 redisClient.set(token, req.body.email);
                 redisClient.expire(token, actionExpire);//token will expire after 15 minutes
-                res.render('user_profile');
+                res.render('user', {token: token});
             }
             else
                 res.send("Incorrect email or password.");
@@ -200,6 +234,18 @@ router.get('/resume/:rid/data', tokenAuth.requireToken, function (req, res, next
 });
 
 //add a comment
+var sqsSendParams = {
+    QueueUrl: "",
+    MessageAttributes: {
+        someKey: { DataType: 'String', StringValue: "string"}
+    }
+};
+
+var sqsGetParams = {
+    QueueName: ""
+};
+
+
 router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, next) {
     Resume.update({rid: req.params.rid}, {
         $push: {
@@ -207,6 +253,14 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         }
     }, function (err, data) {
         if (err) throw err;
+        sqsGetParams.QueueName = req.body.reviewee_id;
+        sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
+        req.body.subject, req.body.link);
+        if (req.body.author_id != req.body.reviewee_id) {
+            sqsGetParams.QueueName = req.body.author_id;
+            sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
+                req.body.subject, req.body.link);
+        }
     });
 });
 

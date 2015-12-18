@@ -8,6 +8,8 @@ var aws = require('aws-sdk');
 
 
 var ses = new aws.SES();
+var sqs = new aws.SQS();
+
 var emailParams = {
     Destination: {ToAddresses: []},
     Message: {Body: {Text: {Data: ''}}, Subject: {Data: ''}},
@@ -19,6 +21,26 @@ var sendMail = function(emailParams) {
         if (err) console.log(err, err.stack); // an error occurred
     });
 };
+
+
+var sendMessageToQueue = function (sqsGetParams, sqsSendParams, author_id, reviewer_id, reviewee_id, subject, link) {
+    sqs.getQueueUrl(sqsGetParams, function(err, data) {
+        if (err) throw err;
+        sqsSendParams.QueueUrl = data.QueueUrl;
+        var obj = {
+            author: author_id,
+            reviewer: reviewer_id,
+            reviewee: reviewee_id,
+            subject: subject,
+            link: link
+        };
+        sqsSendParams.MessageBody = JSON.stringify(obj);
+        sqs.sendMessage(sqsSendParams, function (err, data) {
+            if (err) throw err;
+        });
+    });
+};
+
 
 
 
@@ -48,10 +70,6 @@ router.get('/data', tokenAuth.requireToken, function (req, res, next) {
 //search
 //url: /user/search/?kw=xxx
 router.post('/search', tokenAuth.requireToken, function(req, res, next) {
-    res.render('user');
-});
-
-router.get('/search/data', tokenAuth.requireToken, function(req, res, next) {
     Resume.find({$text: {$search: req.query.kw}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})
         .exec(function (err, data) {
             res.send(data);
@@ -62,9 +80,20 @@ router.get('/search/data', tokenAuth.requireToken, function(req, res, next) {
 
 /*************************** User Profile Page ******************************/
 
-//user edit information
-router.post('/profile/edit', tokenAuth.requireToken, function (req, res, next) {
-    res.render('profile');
+router.get('/profile/:uid/info', tokenAuth.requireToken, function(req, res, next) {
+    res.render('profile_info', {uid: params.uid});
+});
+
+router.get('/profile/:uid/admin', tokenAuth.requireToken, function (req, res, next) {
+    res.render('profile_admin', {uid: params.uid});
+});
+
+router.get('/profile/:uid/topic', tokenAuth.requireToken, function (req, res, next) {
+    res.render('profile_topic', {uid: params.uid});
+});
+
+router.get('/profile/:uid/notification', tokenAuth.requireToken, function (req, res, next) {
+    res.render('profile_notification', {uid: params.uid});
 });
 
 router.get('/profile/:uid/data', tokenAuth.requireToken, function (req, res, next) {
@@ -80,7 +109,6 @@ router.get('/profile/:uid/data', tokenAuth.requireToken, function (req, res, nex
         });
     }
 });
-
 
 
 //user has logged in and want to reset password
@@ -105,24 +133,35 @@ router.post('/profile/password/edit', tokenAuth.requireToken, function (req, res
 });
 
 router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, next) {
-    User.update({uid: req.user.uid}, {$set: req.user}, function (err, data) {
+    User.update({uid: req.user.uid}, {$set: JSON.parse(req.body.user)}, function (err, data) {
         if (err) throw err;
     });
 });
 
 
-//user modify avatar
-router.post('/profile/avatar/edit', tokenAuth.requireToken, function (req, res, next) {
-    User.update({uid: req.user.uid}, {$set: {avatar: req.body.avatar}}, function (err, result) {
-        if (err) throw err;
-    });
-});
-
-
-router.get('/profile/:uid/topic', tokenAuth.requireToken, function(req, res, next) {
+router.get('/profile/:uid/topic/data', tokenAuth.requireToken, function(req, res, next) {
     Resume.find({uid: req.params.uid}, function (err, data) {
         if (err) throw err;
         res.send(data);
+    });
+});
+
+router.get('/profile/:uid/notification/data', tokenAuth.requireToken, function(req, res, next) {
+    var sqsRecieveParams = {
+        QueueUrl: req.params.uid
+    };
+    sqs.receiveMessage(sqsRecieveParams, function(err, data) {
+        res.send(data.Messages);
+    });
+});
+
+router.post('/profile/:uid/notification/check', tokenAuth.requireToken, function(req, res, next) {
+    var sqsDeleteParams = {
+        QueueUrl: req.params.uid,
+        ReceiptHandle: req.body.receiptHandle
+    };
+    sqs.deleteMessage(sqsDeleteParams, function(err, data) {
+        if (err) throw err;
     });
 });
 
@@ -131,7 +170,7 @@ router.get('/profile/:uid/topic', tokenAuth.requireToken, function(req, res, nex
 /********************************* User Resume Page ******************************/
 
 router.get('/resume', tokenAuth.requireToken, function (req, res, next) {
-    res.render('user_resume');
+    res.render('user_resume', {uid: req.user.uid});
 });
 
 router.get('/resume/data', tokenAuth.requireToken, function (req, res, next) {
@@ -147,8 +186,9 @@ router.post('/resume/upload', tokenAuth.requireToken, function(req, res, next) {
         username: req.user.username,
         avatar: req.user.avatar,
         rid: req.body.rid,
+        resumename: req.body.resumename,
         url: req.body.url,
-        tag: req.body.tag,
+        tag: JSON.parse(req.body.tag),
         status: 0
     });
     record.save();
@@ -177,6 +217,18 @@ router.post('/resume/share', tokenAuth.requireToken, function (req, res, next) {
 });
 
 //add a comment
+
+var sqsSendParams = {
+    QueueUrl: "",
+    MessageAttributes: {
+        someKey: { DataType: 'String', StringValue: "string"}
+    }
+};
+
+var sqsGetParams = {
+    QueueName: ""
+};
+
 router.post('/resume/comment', tokenAuth.requireToken, function(req, res, next) {
     Resume.update({rid: req.body.rid}, {
         $push: {
@@ -184,6 +236,14 @@ router.post('/resume/comment', tokenAuth.requireToken, function(req, res, next) 
         }
     }, function (err, data) {
         if (err) throw err;
+        sqsGetParams.QueueName = req.body.reviewee_id;
+        sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
+            req.body.subject, req.body.link);
+        if (req.body.author_id != req.body.reviewee_id) {
+            sqsGetParams.QueueName = req.body.author_id;
+            sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
+                req.body.subject, req.body.link);
+        }
     });
 });
 

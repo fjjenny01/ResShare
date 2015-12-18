@@ -2,8 +2,8 @@ var AWS = require('aws-sdk');
 var fs = require('fs');
 //var awsconfig = require('./config/awsconfig');
 var params = {
-    Bucket: "reshare/resume",
-    Key: "test.pdf",
+    Bucket: "reshare/avatar",
+    Key: "default-profile.png",
     Body: "",
     ACL: 'public-read'
 };
@@ -14,7 +14,7 @@ AWS.config.loadFromPath('./config/awsconfig.json');
 var s3 = new AWS.S3();
 
 
-fs.readFile("/Users/jingxiaogu/Desktop/p50-armbrust.pdf", function(err, data) {
+fs.readFile("/Users/jingxiaogu/Desktop/default-profile.png", function(err, data) {
     if (err) throw err;
     //var b64string = new Buffer(data).toString('base64');
     //console.log(b64string);

@@ -5,7 +5,6 @@ console.log(bucket);
 //bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
 glb_uid = $('#get-uid').innerText;
 $('#get-uid').innerHTML = "";
-
 var img_dir = "images/"
 var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
 var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
@@ -247,7 +246,6 @@ function editProfile(){
     }
     var input = document.getElementById("upload");
     console.log(input.files.length);
-    console.log(input.files[0].type);
     if (input.files.length == 1){
         var timestamp = new Date().getTime();
         var params = {Key: timestamp.toString()+"m."+input.files[0].type.split('/')[1], Body: input.files[0]};

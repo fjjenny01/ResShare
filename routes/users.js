@@ -46,7 +46,7 @@ var sendMessageToQueue = function (sqsGetParams, sqsSendParams, author_id, revie
 
 /****************************** News Page ***********************************/
 
-router.get('/', tokenAuth.requireToken, function (req, res, next) {
+router.get('/', /*tokenAuth.requireToken,*/ function (req, res, next) {
     res.render('user');
 });
 
@@ -135,9 +135,16 @@ router.post('/profile/password/edit', tokenAuth.requireToken, function (req, res
 router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, next) {
     User.update({uid: req.user.uid}, {$set: JSON.parse(req.body.user)}, function (err, data) {
         if (err) throw err;
-        Resume.update({uid: req.user.uid}, {username: JSON.parse(req.body.user.username)}, function (err, data) {
-            if (err) throw err;
-        });
+        if (req.user.username != JSON.parse(req.body.user).username) {
+            Resume.update({uid: req.user.uid}, {username: JSON.parse(req.body.user).username}, function (err, data) {
+                if (err) throw err;
+            });
+        }
+        if (req.user.avatar != JSON.parse(req.body.user).avatar) {
+            Resume.update({uid: req.user.uid}, {avatar: JSON.parse(req.body.user).avatar}, function (err, data) {
+                if (err) throw err;
+            });
+        }
     });
 });
 

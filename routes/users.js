@@ -5,6 +5,7 @@ var Resume = require('../model/dbModel').resume;
 var tokenAuth = require('../middleware/tokenAuth');
 var awsconfig = require('../config/awsconfig');
 var aws = require('aws-sdk');
+var bcrypt = require('bcryptjs');
 
 
 var ses = new aws.SES();
@@ -117,9 +118,13 @@ router.post('/profile/password/edit', tokenAuth.requireToken, function (req, res
         res.send("passwords don't match, please try again");
         return;
     }
+    console.log(req.body.password);
     var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-    User.update({email: req.user.email}, {$set: {password: hash}}, function (err, result) {
-        if (err) res.send("internal err");
+    console.log(hash);
+    User.update({uid: req.user.uid}, {password: hash}, function (err, result) {
+        if (err) {
+            res.send("internal err");
+        }
         else {
             res.send("Your password has been successfully reset");
             emailParams.Message.Subject.Data = 'Your password has been changed';
@@ -127,7 +132,6 @@ router.post('/profile/password/edit', tokenAuth.requireToken, function (req, res
             emailParams.Message.Body.Text.Data = 'Hello,\n\n' +
                 'This is a confirmation that the password for your account ' + req.body.email + ' has just been changed.\n';
             sendMail(emailParams);
-            res.render("password_reset");
         }
     });
 });

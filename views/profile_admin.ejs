@@ -103,11 +103,11 @@
                     -->
 
                     <div class="list-group table-of-contents">
-                        <a class="list-group-item" href="#">Profile</a>
-                        <a class="list-group-item" href="#">Account Setting</a>
-                        <a class="list-group-item" href="#">My Events</a>
-                        <a class="list-group-item" href="#">Notifications</a>
-                        <a class="list-group-item" href="#">My Resume</a>
+                        <a class="list-group-item" id="link-info">Profile</a>
+                        <a class="list-group-item" id="link-admin">Account Setting</a>
+                        <a class="list-group-item" id="link-topics">My Events</a>
+                        <a class="list-group-item" id="link-notification">Notifications</a>
+                        <a class="list-group-item" id="link-resume">My Resume</a>
                     </div>
 
 
@@ -121,18 +121,20 @@
                 <div class="divider"></div>
 
 
-                <div class="form-group">
-                    <label class="control-label" for="disabledInput">New Password</label>
-                    <input class="form-control" id="newpw" type="text" placeholder="" disabled="">
+                <div id="newpwd" class="form-group">
+                    <label class="control-label">New Password</label>
+                    <input class="form-control" id="newpw" type="password">
                 </div>
-                <div class="form-group">
-                    <label class="control-label" for="focusedInput">Confirm Password</label>
-                    <input class="form-control" id="confirmpw" type="text" value="">
+                <div id="confirmpwd" class="form-group">
+                    <label class="control-label">Confirm Password</label>
+                    <input class="form-control" id="confirmpw" type="password">
                 </div>
 
 
-                <button type="button" class="btn btn-primary"  onclick="editProfile()">Updata Password
+                <button type="button" class="btn btn-primary"  onclick="updatePw()">Update Password
                 </button>
+
+                <span><p id="result"></p></span>
 
 
                 <!-- Modal -->
@@ -184,8 +186,9 @@
 
         </div>
     </div>
+    <div id="get-uid"> <%= uid %> </div>
 </div>
-<div id="get-uid"> <%= uid %> </div>
+
 <script src="../../../javascripts/profile_admin.js"></script>
 
 </body>

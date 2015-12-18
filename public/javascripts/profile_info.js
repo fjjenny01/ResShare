@@ -33,11 +33,11 @@ $.ajax({
     }
 });
 
-$("#link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
-$("#link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
-$("#link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
-$("#link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
-$("#link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
 function search(){
     var input = document.getElementById("searchInput").value.split(" ").join("+");
     $.ajax({
@@ -253,10 +253,11 @@ function editProfile(){
     console.log(input.files.length);
     if (input.files.length == 1){
         var timestamp = new Date().getTime();
-        var params = {Key: timestamp.toString()+"m."+input.files[0].type.split('/')[1], Body: input.files[0]};
+        var params = {Key: timestamp.toString()+"."+input.files[0].type.split('/')[1], Body: input.files[0]};
         console.log(params);
         user_data.avatar.url = "https://s3.amazonaws.com/czcbucket%2Favatars/"+params.Key;
         bucket.upload(params, function (err, data) {
+
         });
         console.log(user_data.avatar.url);
     }

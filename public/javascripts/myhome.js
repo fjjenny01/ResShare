@@ -68,8 +68,11 @@ function loadEvents(res_list){
 		imgd.className = "col-lg-2";
 		cttd.className = "col-lg-10";
 		var img = document.createElement("img");
-		img.className = "img-responsive img-circle";
+		img.className = "img-hover img-responsive img-circle";
 		img.src = res_list[i]["avatar"]["url"];
+		var aimg = document.createElement("a");
+		aimg.href = "/user/profile/"+res_list[i].uid+"/info?access_token="+localStorage.getItem("ResToken");
+		aimg.appendChild(img);
 		var fstLine = document.createElement("div");
 		var usr = document.createElement("h5");
 		usr.innerText = res_list[i]["username"];
@@ -89,7 +92,7 @@ function loadEvents(res_list){
 		content.innerText = res_list[i]["content"];
 		var dvd = document.createElement("div");
 		dvd.className = "divider";
-		imgd.appendChild(img);
+		imgd.appendChild(aimg);
 		asub.appendChild(sub);
 		cttd.appendChild(asub);
 		cttd.appendChild(usr);

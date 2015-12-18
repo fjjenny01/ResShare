@@ -7,8 +7,8 @@
     <title>ResShare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="../public/stylesheets/bootstrap.css" media="screen">
-    <link rel="stylesheet" href="../public/stylesheets/custom_c.min.css">
+    <link rel="stylesheet" href="stylesheets/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/custom_c.min.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
@@ -16,8 +16,8 @@
     <![endif]-->
     <script type="text/javascript" async="" src="https://ssl.google-analytics.com/ga.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="../public/javascripts/bootstrap.min.js"></script>
-    <script src="../public/javascripts/custom.js"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+    <script src="javascripts/custom.js"></script>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.21.min.js"></script>
     <style>
 </style>
@@ -42,12 +42,12 @@
         	<a href="">Function 2</a>
         </li>
         <li>
-        	<form class="navbar-form navbar-left" role="search">
+        	<div class="navbar-form navbar-left" role="search">
 		        <div class="form-group">
-		          <input type="text" class="form-control" placeholder="Search Resume">
+		          <input id="searchInput" type="text" class="form-control" placeholder="Search Resume">
 		        </div>
-		        <button type="submit" class="btn btn-default">Submit</button>
-	      	</form>
+		        <button type="submit" class="btn btn-default" onclick="search()">Search</button>
+	      	</div>
         </li>
       </ul>
 
@@ -76,9 +76,9 @@
 			<div class="col-lg-3">
 
 				<div class="affix leftbound">
-					<img class="img-responsive img-circle" src="../public/images/default_profile.jpg" >
+					<img id="prof_img" class="img-responsive img-circle" src="images/default_profile.jpg" >
 
-					<h3 id="name"> Name <img class="img-hover pull-right" src="../public/images/gear39.png" data-toggle="modal" data-target="#myModal" onclick="feedDataModal()"></h3>
+					<h3 id="name"> Name <img class="img-hover pull-right" src="images/gear39.png" data-toggle="modal" data-target="#myModal" onclick="feedDataModal()"></h3>
 					<h6 class="divider"></h6>
 					<table class="table table-striped table-hover">
 						<tbody id="prof_tb">
@@ -116,10 +116,10 @@
 				
 			</div>
 			
-			<div class="col-lg-8">
+			<div class="col-lg-8" id="main-panel">
 				<div>
 					<div class="col-lg-2">
-						<img class="img-responsive img-circle" src="../public/images/default_profile.jpg">
+						<img class="img-responsive img-circle" src="images/default_profile.jpg">
 					</div>
 					<div class="col-lg-10">
 						<h4>XXX<p class="text-primary pull-right">invite you to review his resume</p></h4>	
@@ -130,7 +130,7 @@
 				</div>
 				<div>
 					<div class="col-lg-2">
-						<img class="img-responsive img-circle" src="../public/images/default_profile.jpg">
+						<img class="img-responsive img-circle" src="images/default_profile.jpg">
 					</div>
 					<div class="col-lg-10">
 						<h4>XXX<p class="text-primary pull-right">invite you to review his resume</p></h4>	
@@ -141,7 +141,7 @@
 				</div>
 				<div>
 					<div class="col-lg-2">
-						<img class="img-responsive img-circle" src="../public/images/good.png">
+						<img class="img-responsive img-circle" src="images/good.png">
 					</div>
 					<div class="col-lg-10">
 						<h4>XXX<p class="text-success pull-right">System Recommend Resume</p></h4>	
@@ -152,7 +152,7 @@
 				</div>
 				<div>
 					<div class="col-lg-2">
-						<img class="img-responsive img-circle" src="../public/images/default_profile.jpg">
+						<img class="img-responsive img-circle" src="images/default_profile.jpg">
 					</div>
 					<div class="col-lg-10">
 						<h4>XXX<p class="text-primary pull-right">invite you to review his resume</p></h4>	
@@ -217,7 +217,7 @@
 	</div>
 </div>
 
-<script src="../public/javascripts/myhome.js"></script>
+<script src="javascripts/myhome.js"></script>
 
 </body>
 </html>

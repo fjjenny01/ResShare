@@ -5,36 +5,92 @@ var bucket = new AWS.S3({params: {Bucket: 'czcbucket'}});
 console.log(bucket);
 bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
 */
-var user_data = {};
-var res_list = [];
 
+var img_dir = "images/"
+var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
+var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
+
+//user_data = {"username":"chaozc", "first name":"Zichen", "lastname":"Chao", "email":"zichen.chao@columbia.edu", "status":1, "company":"Columbia University", "interested_field":["Software Development", "IEOR", "Consulting", "Education"], "avatar":{"url":"../public/images/default_profile.jpg", "aid":""}};
+res_list = [{"username":"jingxiao", "link":"www.google.com", "subject":"HelloHello", "content":"Hi, would you please check my resume?? ...........................................Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??","tag":int_fields}]
+var prof_fields = ["email", "company"];
+var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
 $.ajax({
 url: "/user/data",
 type: "GET",
 dataType: "json",
 success: function (data) {
-    alert(data);
+    //alert(data);
     user_data = data["user"];
+	console.log(user_data);
     res_list = data["resume"];
+	console.log(res_list);
+	loadProfile(user_data);
+	loadEvents(res_list);
 }
 });
 
-var img_dir = "../public/images/"
-var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
-var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
+function search(){
+	var input = document.getElementById("searchInput").value.split(" ").join("+");
+	$.ajax({
+		url: "/user/search/?kw="+input,
+		type: "POST",
+		dataType: "json",
+		success: function (data) {
+			res_list = data;
+			loadEvents(res_list);
+		}
+	});
+}
 
-user_data = {"username":"chaozc", "first name":"Zichen", "lastname":"Chao", "email":"zichen.chao@columbia.edu", "status":1, "company":"Columbia University", "interested_field":["Software Development", "IEOR", "Consulting", "Education"], "avatar":{"url":"../public/images/default_profile.jpg", "aid":""}};
-res_list = [{"username":"jingxiao", "link":"www.google.com", "subject":"HelloHello", "content":"Hi, would you please check my resume?? ...........................................Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??","tag":int_fields}]
-var prof_fields = ["email", "company"];
-var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
-loadProfile(user_data);
-loadEvents(res_list);
+//loadEvents(res_list);
 function loadEvents(res_list){
+	var mp = document.getElementById("main-panel");
+	mp.innerHTML = "";
+	for (var i = 0; i < res_list.length; i++){
+		var div = document.createElement("div");
+		var imgd = document.createElement("div");
+		var cttd = document.createElement("div");
+		imgd.className = "col-lg-2";
+		cttd.className = "col-lg-10";
+		var img = document.createElement("img");
+		img.className = "img-responsive img-circle";
+		img.src = res_list[i]["avatar"]["url"];
+		var fstLine = document.createElement("div");
+		var usr = document.createElement("h5");
+		usr.innerText = res_list[i]["username"];
+		//fstLine.appendChild(usr);
+		for (var j = 0; j < res_list[i]["tag"].length; j++){
+			var sp = document.createElement("span");
+			sp.className = "label label-info margin-tag pull-right";
+			sp.innerText = res_list[i]["tag"][j];
+			usr.appendChild(sp);
+		}
+		var asub = document.createElement("a");
+		asub.href = "http://"+res_list[i]["link"];
+		var sub = document.createElement("h4");
+		sub.innerText = res_list[i]["subject"];
+		sub.className = "text-info";
+		var content = document.createElement("p");
+		content.innerText = res_list[i]["content"];
+		var dvd = document.createElement("div");
+		dvd.className = "divider";
+		imgd.appendChild(img);
+		asub.appendChild(sub);
+		cttd.appendChild(asub);
+		cttd.appendChild(usr);
+		cttd.appendChild(content);
+		div.appendChild(imgd);
+		div.appendChild(cttd);
+		div.appendChild(dvd);
+		mp.appendChild(div);
+	}
 
 }
 function loadProfile(user_data){
 	var prof_tb = document.getElementById("prof_tb");
-	document.getElementById("name").innerHTML = user_data["first name"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
+	console.log(user_data);
+	document.getElementById("prof_img").src = user_data["avatar"]["url"];
+	document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
 	for (var i = 0; i < prof_fields.length; ++i){
 		var tr = document.createElement("tr");
 		var td = document.createElement("td");
@@ -55,7 +111,7 @@ function loadProfile(user_data){
 	for (var j = 0; j < user_data["interested_field"].length; ++j){
 		var sp = document.createElement("span");
 		sp.className = "label label-primary margin-tag";
-		sp.innerText = int_fields[j];
+		sp.innerText = user_data["interested_field"][j];
 		cnt = cnt+1;
 		if (cnt%2 == 1){
 			div = document.createElement("div");
@@ -109,6 +165,8 @@ function loadProfile(user_data){
 	}
 	*/
 }
+
+
 function feedDataModal(){
 	var fbd = document.getElementById("profile-form");
 	fbd.innerHTML = "";
@@ -126,7 +184,7 @@ function feedDataModal(){
 				var cb = document.createElement("input");
 				cb.type = "checkbox";
 				cb.id = int_fields[i];
-				cbd.appendChild(cb)
+				cbd.appendChild(cb);
 				cbd.innerHTML = cbd.innerHTML+" "+int_fields[i]
 				fd.appendChild(cbd);
 			}

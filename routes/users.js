@@ -81,6 +81,7 @@ router.post('/search', tokenAuth.requireToken, function(req, res, next) {
 /*************************** User Profile Page ******************************/
 
 router.get('/profile/:uid/info', tokenAuth.requireToken, function(req, res, next) {
+    console.log(req.params.uid);
     res.render('profile_info', {uid: req.params.uid});
 });
 
@@ -98,14 +99,13 @@ router.get('/profile/:uid/notification', tokenAuth.requireToken, function (req, 
 
 router.get('/profile/:uid/data', tokenAuth.requireToken, function (req, res, next) {
     if (req.user.uid == req.params.uid) {
-        req.user.self = true;
-        res.send(req.user);
+        res.send({user: req.user, self:true});
     }
     else {
         User.findOne({uid: req.params.uid}, function (err, user) {
             if (err) throw err;
-            user.self = false;
-            res.send(user);
+
+            res.send({user: user, self:false});
         });
     }
 });

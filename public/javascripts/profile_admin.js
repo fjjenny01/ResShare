@@ -3,9 +3,8 @@ AWS.config.region = 'us-east-1';
 var bucket = new AWS.S3({params: {Bucket: 'czcbucket/avatars', ACL:'public-read'}});
 console.log(bucket);
 //bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
-glb_uid = document.getElementById("get-uid").innerText;
-console.log(glb_uid);
-//$('#get-uid').innerHTML = "";
+glb_uid = $('#get-uid').innerText;
+$('#get-uid').innerHTML = "";
 var img_dir = "images/"
 var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
 var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
@@ -17,7 +16,7 @@ var int_fields = ["Software Development", "Finance", "Computer Science", "Educat
 user_data = null;
 res_list = null;
 $.ajax({
-    url: "/user/profile/"+glb_uid+"/data",
+    url: "/user/data",
     type: "GET",
     async: false,
     data: {"access_token": localStorage.getItem("ResToken")},
@@ -26,18 +25,14 @@ $.ajax({
         //alert(data);
         user_data = data.user;
         console.log(user_data);
-        self = data.self;
-        console.log(self);
+        res_list = data["resume"];
+        //console.log(res_list);
         loadProfile(user_data);
         //loadEvents(res_list);
     }
 });
+//console.log(m);
 
-$("#link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
-$("#link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
-$("#link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
-$("#link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
-$("#link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
 function search(){
     var input = document.getElementById("searchInput").value.split(" ").join("+");
     $.ajax({

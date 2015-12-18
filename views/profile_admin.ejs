@@ -103,11 +103,11 @@
                     -->
 
                     <div class="list-group table-of-contents">
-                        <a class="list-group-item" id="link-info">Profile</a>
-                        <a class="list-group-item" id="link-admin">Account Setting</a>
-                        <a class="list-group-item" id="link-topics">My Events</a>
-                        <a class="list-group-item" id="link-notification">Notifications</a>
-                        <a class="list-group-item" id="link-resume">My Resume</a>
+                        <a class="list-group-item" href="#">Profile</a>
+                        <a class="list-group-item" href="#">Account Setting</a>
+                        <a class="list-group-item" href="#">My Events</a>
+                        <a class="list-group-item" href="#">Notifications</a>
+                        <a class="list-group-item" href="#">My Resume</a>
                     </div>
 
 
@@ -122,40 +122,16 @@
 
 
                 <div class="form-group">
-                    <label class="control-label" for="disabledInput">Email</label>
-                    <input class="form-control" id="email" type="text" placeholder="" disabled="">
+                    <label class="control-label" for="disabledInput">New Password</label>
+                    <input class="form-control" id="newpw" type="text" placeholder="" disabled="">
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="focusedInput">User Name</label>
-                    <input class="form-control" id="set-username" type="text" value="">
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="focusedInput">Last Name</label>
-                    <input class="form-control" id="set-lastname" type="text" value="">
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="focusedInput">First Name</label>
-                    <input class="form-control" id="set-firstname" type="text" value="">
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="focusedInput">Company</label>
-                    <input class="form-control" id="set-company" type="text" value="">
+                    <label class="control-label" for="focusedInput">Confirm Password</label>
+                    <input class="form-control" id="confirmpw" type="text" value="">
                 </div>
 
-                <div class="form-group" id="int-f-cb">
-                    <label class="control-label" for="focusedInput">Interested Field</label>
 
-                </div>
-
-                <div class="form-group">
-
-                </div>
-
-                <span class="btn btn-info btn-file" class="btn btn-info btn-file" id="img_upload">
-                        Upload Avatar <input class="file" type="file" id="upload" size="chars"  accept="image/*">
-                        </span>
-                <button type="button" class="btn btn-primary"  onclick="editProfile()">Save
-                    changes
+                <button type="button" class="btn btn-primary"  onclick="editProfile()">Updata Password
                 </button>
 
 
@@ -208,10 +184,9 @@
 
         </div>
     </div>
-
 </div>
 <div id="get-uid"> <%= uid %> </div>
-<script src="../../../javascripts/profile_info.js"></script>
+<script src="../../../javascripts/profile_admin.js"></script>
 
 </body>
 </html>

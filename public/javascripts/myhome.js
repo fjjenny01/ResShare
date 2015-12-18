@@ -71,6 +71,7 @@ function loadEvents(res_list){
 		img.className = "img-hover img-responsive img-circle";
 		img.src = res_list[i]["avatar"]["url"];
 		var aimg = document.createElement("a");
+		console.log(res_list[i].uid);
 		aimg.href = "/user/profile/"+res_list[i].uid+"/info?access_token="+localStorage.getItem("ResToken");
 		aimg.appendChild(img);
 		var fstLine = document.createElement("div");
@@ -244,38 +245,7 @@ function editProfile(){
 	document.getElementById("name").innerHTML = document.getElementById("set-name").value+'<img class="img-hover pull-right" src="../public/images/gear39.png" data-toggle="modal" data-target="#myModal" onclick="feedDataModal()">';
 	document.getElementById("loc").innerHTML = document.getElementById("set-loc").value;
 	document.getElementById("edu").innerHTML = document.getElementById("set-edu").value;
-	/*
-	var input = document.getElementById("upload");
-	var params = {Key: '123.pdf', Body: input.files[0]};
-    bucket.upload(params, function (err, data) {
-      console.log(err);
-      console.log(data);
-    });
-*/
 
-	//document.getElementById("show").innerHTML = document.getElementById("upload").value;
-/*
-var input = document.getElementById("upload");
-var fReader = new FileReader();
-fReader.readAsDataURL(input.files[0]);
-fReader.onloadend = function(event){
-$.post( "test.php", { file:event.target.result } );
-}
-window.open("data:text/json;charset=utf-8," + escape(event.target.result));
-
-document.getElementById("show").innerHTML = event.target.result;
-}*/
 
 }
 
-/*
-$(function()
-    {
-        $('#upload').on('change',function ()
-        {
-            var filePath = $(this).val();
-            console.log(filePath);
-        });
-    });
-*/
-/*test*/

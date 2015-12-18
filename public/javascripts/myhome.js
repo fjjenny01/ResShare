@@ -13,21 +13,35 @@ var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Int
 //user_data = {"username":"chaozc", "first name":"Zichen", "lastname":"Chao", "email":"zichen.chao@columbia.edu", "status":1, "company":"Columbia University", "interested_field":["Software Development", "IEOR", "Consulting", "Education"], "avatar":{"url":"../public/images/default_profile.jpg", "aid":""}};
 res_list = [{"username":"jingxiao", "link":"www.google.com", "subject":"HelloHello", "content":"Hi, would you please check my resume?? ...........................................Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??","tag":int_fields}]
 var prof_fields = ["email", "company"];
-var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
+//var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
+
+localStorage.setItem("ResToken", "qwertyuiop");
+console.log(localStorage.getItem("ResToken"));
+
 $.ajax({
-url: "/user/data",
-type: "GET",
-dataType: "json",
-success: function (data) {
-    //alert(data);
-    user_data = data["user"];
-	console.log(user_data);
-    res_list = data["resume"];
-	console.log(res_list);
-	loadProfile(user_data);
-	loadEvents(res_list);
-}
+	url: "/user/data",
+	type: "GET",
+	data: {"access_token": localStorage.getItem("ResToken")},
+	dataType: "json",
+	success: function (data) {
+    	//alert(data);
+    	user_data = data["user"];
+		console.log(user_data);
+    	res_list = data["resume"];
+		console.log(res_list);
+		loadProfile(user_data);
+		loadEvents(res_list);
+	}
 });
+//
+//$.get ("/user/data", { json: JSON.stringify({"access_token": localStorage.getItem("ResToken")}) }, function (data){
+//	user_data = data["user"];
+//		console.log(user_data);
+//    	res_list = data["resume"];
+//		console.log(res_list);
+//		loadProfile(user_data);
+//		loadEvents(res_list);
+//});
 
 function search(){
 	var input = document.getElementById("searchInput").value.split(" ").join("+");

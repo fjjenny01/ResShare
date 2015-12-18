@@ -81,21 +81,20 @@ router.post('/search', tokenAuth.requireToken, function(req, res, next) {
 
 /*************************** User Profile Page ******************************/
 
-router.get('/profile/:uid/info', tokenAuth.requireToken, function(req, res, next) {
-    console.log(req.params.uid);
+router.get('/profile/:uid/info', function(req, res, next) {
     res.render('profile_info', {uid: req.params.uid});
 });
 
-router.get('/profile/:uid/admin', tokenAuth.requireToken, function (req, res, next) {
-    res.render('profile_admin', {uid: req.params.uid});
+router.get('/profile/admin', tokenAuth.requireToken, function (req, res, next) {
+    res.render('profile_admin', {uid: req.user.uid});
 });
 
-router.get('/profile/:uid/topic', tokenAuth.requireToken, function (req, res, next) {
+router.get('/profile/:uid/topic', function (req, res, next) {
     res.render('profile_topic', {uid: req.params.uid});
 });
 
-router.get('/profile/:uid/notification', tokenAuth.requireToken, function (req, res, next) {
-    res.render('profile_notification', {uid: req.params.uid});
+router.get('/profile/notification',tokenAuth.requireToken, function (req, res, next) {
+    res.render('profile_notification', {uid: req.user.uid});
 });
 
 router.get('/profile/:uid/data', tokenAuth.requireToken, function (req, res, next) {
@@ -160,7 +159,7 @@ router.get('/profile/:uid/topic/data', tokenAuth.requireToken, function(req, res
     });
 });
 
-router.get('/profile/:uid/notification/data', tokenAuth.requireToken, function(req, res, next) {
+router.get('/profile/notification/data', tokenAuth.requireToken, function(req, res, next) {
     var sqsRecieveParams = {
         QueueUrl: req.params.uid
     };
@@ -169,7 +168,7 @@ router.get('/profile/:uid/notification/data', tokenAuth.requireToken, function(r
     });
 });
 
-router.post('/profile/:uid/notification/check', tokenAuth.requireToken, function(req, res, next) {
+router.post('/profile/notification/check', tokenAuth.requireToken, function(req, res, next) {
     var sqsDeleteParams = {
         QueueUrl: req.params.uid,
         ReceiptHandle: req.body.receiptHandle

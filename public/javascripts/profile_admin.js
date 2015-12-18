@@ -20,7 +20,7 @@ $.ajax({
     url: "/user/profile/"+glb_uid+"/data",
     type: "GET",
     async: false,
-    data: {"access_token": localStorage.getItem("ResToken")},
+    headers: {"access_token": localStorage.getItem("ResToken")},
     dataType: "json",
     success: function (data) {
         //alert(data);
@@ -34,11 +34,11 @@ $.ajax({
     }
 });
 //console.log(m);
-document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info";
+document.getElementById("link-admin").href = "/user/profile/admin";
+document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic";
+document.getElementById("link-notification").href = "/user/profile/notification";
+document.getElementById("link-resume").href = "/user/resume";
 function search(){
     var input = document.getElementById("searchInput").value.split(" ").join("+");
     $.ajax({
@@ -170,7 +170,8 @@ function updatePw(){
     $.ajax({
         url: "/user/profile/password/edit",
         type: "POST",
-        data: {"access_token": localStorage.getItem("ResToken"), "password": newpw, "confirm_password": confirmpw, "email": user_data.email},
+        headers: {"access_token": localStorage.getItem("ResToken")},
+        data: { "password": newpw, "confirm_password": confirmpw, "email": user_data.email},
         datatype: "String",
         success: function (data) {
             if (data.indexOf("successfully") == -1){

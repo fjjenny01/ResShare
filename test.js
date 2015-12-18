@@ -1,8 +1,8 @@
-////var mongoose = require('mongoose');
-////var Schema = mongoose.Schema;
-////mongoose.connect("mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare");
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+mongoose.connect("mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare");
 //
-//var User = require('./model/dbModel').user;
+////var User = require('./model/dbModel').user;
 //var Resume = require('./model/dbModel').resume;
 //
 //
@@ -19,13 +19,13 @@
 ////    ]
 ////)
 ////
-////var db = mongoose.model("article", new Schema({
-////    _id: Number,
-////    subject: String,
-////    author: String,
-////    views: Number,
-////    tag: [String]
-////}).index({tag: "text", subject: "text"}));
+var db = mongoose.model("article", new Schema({
+    _id: Number,
+    subject: String,
+    author: String,
+    views: Number,
+    tag: [String]
+}).index({tag: "text", subject: "text"}));
 //
 //
 ////var o1 = new db({_id: 1, subject: "coffee", author: "xyz", views: 50, tag: ["engineer", "market"]});
@@ -46,12 +46,12 @@
 ////o7.save();
 ////o8.save();
 //
-////db.find({$text: {$search: "coffee"}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})
-////    .exec(function(err, results) {
-////        console.log(results);
-////    });
-//
-//
+db.find({$text: {$search: "coff"}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})
+    .exec(function(err, results) {
+        console.log(results);
+    });
+
+
 //var o1 = new User({
 //    username: "shawn",
 //    firstname: "jingxiao",
@@ -91,28 +91,28 @@
 //    tag: ["Engineering"],
 //    status: 1
 //});
-//
-//
-//var o4 = new Resume({
-//    uid: "fgh",
-//    username: "chazc",
-//    avatar: {url: "https://s3.amazonaws.com/reshare%2Favatar/default-profile.png", aid: "sadswqrqklaj"},
-//    rid: "124432",
-//    url: "www.s3.r2.pdf",
-//    link: "www.baidu.com",
-//    subject: "Looking for someone to improve my resume",
-//    content: "Can anyone give me some advice on how to improve my resume, thx",
-//    tag: ["Computer Science"],
-//    status: 1
-//});
-//
-////o1.save();
-////o2.save();
+////
+////
+////var o4 = new Resume({
+////    uid: "fgh",
+////    username: "chazc",
+////    avatar: {url: "https://s3.amazonaws.com/reshare%2Favatar/default-profile.png", aid: "sadswqrqklaj"},
+////    rid: "124432",
+////    url: "www.s3.r2.pdf",
+////    link: "www.baidu.com",
+////    subject: "Looking for someone to improve my resume",
+////    content: "Can anyone give me some advice on how to improve my resume, thx",
+////    tag: ["Computer Science"],
+////    status: 1
+////});
+////
+//////o1.save();
+//////o2.save();
 //o3.save();
-//o4.save();
-
-var b = 60 * 60 * 24;
-console.log(b);
+////o4.save();
+//
+//var b = 60 * 60 * 24;
+//console.log(b);
 
 
 

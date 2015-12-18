@@ -14,6 +14,8 @@ client.on('connect', function() {
 //client.set('qwertyuiop', "abcde");
 //client.expire('qwertyuiop', 60 * 60 * 24);
 
+
+
 client.keys('*', function (err, keys) {
     if (err) return console.log(err);
     for(var i = 0, len = keys.length; i < len; i++) {

@@ -72,7 +72,7 @@ function loadEvents(res_list){
 		img.src = res_list[i]["avatar"]["url"];
 		var aimg = document.createElement("a");
 		console.log(res_list[i].uid);
-		aimg.href = "/user/profile/"+res_list[i].uid+"/info?access_token="+localStorage.getItem("ResToken");
+		aimg.href = "/user/profile/"+res_list[i].uid+"/info";
 		aimg.appendChild(img);
 		var fstLine = document.createElement("div");
 		var usr = document.createElement("h5");
@@ -119,7 +119,7 @@ function loadEvents(res_list){
 function loadProfile(user_data){
 	var prof_tb = document.getElementById("prof_tb");
 	console.log(user_data);
-	document.getElementById("user_prof_link").href = "/user/profile/"+user_data.uid+"/info?access_token="+localStorage.getItem("ResToken");
+	document.getElementById("user_prof_link").href = "/user/profile/"+user_data.uid+"/info";
 	document.getElementById("prof_img").src = user_data["avatar"]["url"];
 	document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
 	for (var i = 0; i < prof_fields.length; ++i){

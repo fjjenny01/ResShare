@@ -21,6 +21,7 @@ console.log(localStorage.getItem("ResToken"));
 $.ajax({
 	url: "/user/data",
 	type: "GET",
+	async: false,
 	data: {"access_token": localStorage.getItem("ResToken")},
 	dataType: "json",
 	success: function (data) {
@@ -100,9 +101,21 @@ function loadEvents(res_list){
 	}
 
 }
+//function view_user(uid){
+//	console.log(uid);
+//	$.ajax({
+//		url: "/user/profile/"+uid+"/info",
+//		type: "GET",
+//		data: {"access_token": localStorage.getItem("ResToken")},
+//		dataType: "json",
+//		success: function (data) {
+//		}
+//	});
+//}
 function loadProfile(user_data){
 	var prof_tb = document.getElementById("prof_tb");
 	console.log(user_data);
+	document.getElementById("user_prof_link").href = "/user/profile/"+user_data.uid+"/info?access_token="+localStorage.getItem("ResToken");
 	document.getElementById("prof_img").src = user_data["avatar"]["url"];
 	document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
 	for (var i = 0; i < prof_fields.length; ++i){

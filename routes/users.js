@@ -81,19 +81,19 @@ router.post('/search', tokenAuth.requireToken, function(req, res, next) {
 /*************************** User Profile Page ******************************/
 
 router.get('/profile/:uid/info', tokenAuth.requireToken, function(req, res, next) {
-    res.render('profile_info', {uid: params.uid});
+    res.render('profile_info', {uid: req.params.uid});
 });
 
 router.get('/profile/:uid/admin', tokenAuth.requireToken, function (req, res, next) {
-    res.render('profile_admin', {uid: params.uid});
+    res.render('profile_admin', {uid: req.params.uid});
 });
 
 router.get('/profile/:uid/topic', tokenAuth.requireToken, function (req, res, next) {
-    res.render('profile_topic', {uid: params.uid});
+    res.render('profile_topic', {uid: req.params.uid});
 });
 
 router.get('/profile/:uid/notification', tokenAuth.requireToken, function (req, res, next) {
-    res.render('profile_notification', {uid: params.uid});
+    res.render('profile_notification', {uid: req.params.uid});
 });
 
 router.get('/profile/:uid/data', tokenAuth.requireToken, function (req, res, next) {
@@ -135,6 +135,9 @@ router.post('/profile/password/edit', tokenAuth.requireToken, function (req, res
 router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, next) {
     User.update({uid: req.user.uid}, {$set: JSON.parse(req.body.user)}, function (err, data) {
         if (err) throw err;
+        Resume.update({uid: req.user.uid}, {username: JSON.parse(req.body.user.username)}, function (err, data) {
+            if (err) throw err;
+        });
     });
 });
 

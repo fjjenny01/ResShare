@@ -9,7 +9,7 @@ client.on('connect', function() {
 });
 
 //client.set("test", "abcde");
-//client.expire("test", 60 * 60);
+//client.expire("test", 60 * 15);
 
 //client.set('qwertyuiop', "abcde");
 //client.expire('qwertyuiop', 60 * 60 * 24);

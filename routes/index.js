@@ -96,12 +96,18 @@ router.post('/register', function(req, res, next) {
             var uid = uuid.v1();
             var record = new User({
                 username: req.body.username,
+                firstname: '',
+                lastname: '',
                 uid: uid,
                 email: req.body.email,
                 password: hash,
-                status: 0
+                status: 0,
+                company: '',
+                interested_field: [],
+                avatar: {url: "https://s3.amazonaws.com/reshare%2Favatar/default-profile.png", aid: uuid.v1()}
             });
             var token = uuid.v1();
+            console.log('regis uid: ' + uid);
             redisClient.set(token, uid);
             redisClient.expire(token, tokenExpire);//token will expire after 24 hours
             record.save(function(err) {
@@ -146,6 +152,7 @@ router.post('/forgot', function(req, res, next) {
                     return;
                 }
                 var token = uuid.v1();
+                console.log('forgot: ' + user.uid);
                 redisClient.set(token, user.uid);
                 redisClient.expire(token, tokenExpire);//token will expire after 24 hours
                 emailParams.Message.Subject.Data = 'Reset The Password';
@@ -195,7 +202,7 @@ router.post('/login', function(req, res) {
             if (user.status == 0) res.send({"success":true,"message":"ok","data":"Your account has not been activated, please go to activate your account"});
             else if (bcrypt.compareSync(req.body.password, user.password)) {
                 var token = uuid.v1();
-                redisClient.set(token, req.body.email);
+                redisClient.set(token, user.uid);
                 redisClient.expire(token, actionExpire);//token will expire after 15 minutes
                 res.send({"success":true,"message":"ok","data":{page:'user', "token": token}});
             }

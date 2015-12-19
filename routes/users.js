@@ -47,7 +47,8 @@ var sendMessageToQueue = function (sqsGetParams, sqsSendParams, author_id, revie
 
 /****************************** News Page ***********************************/
 
-router.get('/', /*tokenAuth.requireToken,*/ function (req, res, next) {
+router.get('/', tokenAuth.requireToken, function (req, res, next) {
+    console.log("sd")
     res.render('user');
 });
 
@@ -203,8 +204,12 @@ router.post('/resume/upload', tokenAuth.requireToken, function(req, res, next) {
         rid: req.body.rid,
         resumename: req.body.resumename,
         url: req.body.url,
+        link: '',
+        subject: '',
+        content: '',
         tag: JSON.parse(req.body.tag),
-        status: 0
+        status: 0,
+        comments:[]
     });
     record.save();
 });

@@ -47,7 +47,12 @@ module.exports.resume = mongoose.model('resume', new Schema({
     content: String,
     tag: [String],
     status: Number,
-    comments: [{uid: String, comment: String}]
+    comments: [{
+        reviewer_name: String,
+        reviewee_name: String,
+        author_name: String,
+        comment: String
+    }]
 }).index({username: "text", subject: "text", tag: "text"}));
 
 module.exports.redisClient = client;

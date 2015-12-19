@@ -123,7 +123,7 @@ function userlogin(){
         success: function (data) {
             if(data.data.page){
                 localStorage.setItem("ResToken",data.data.token)
-                window.location.href=data.data.page;
+                window.location.href=data.data.page+'?access_token='+data.data.token;
 
             }else{
             alert(data.data);

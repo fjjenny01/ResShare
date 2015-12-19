@@ -94,14 +94,14 @@
                     </div>
                 </div>
 
-                <form id="searchForm" class="col-sm-12" method="POST" action="register"
-                      onsubmit="return checkForm(this);">
+                <form id="searchForm" class="col-sm-12"
+                      onsubmit="return signup_email_check();">
                     <div class="form-group col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4">
                         <div class="form-group login">
                             <label for="inputUsername" class=" control-label">Username</label>
 
                             <div>
-                                <input name="username" type="text" class="form-control" id="inputUsername"
+                                <input name="username" type="text" class="form-control" id="input_username"
                                        placeholder="Username" required>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                             <label for="inputEmail" class=" control-label">Email</label>
 
                             <div>
-                                <input type="email" class="form-control" id="inputEmail"
+                                <input type="email" class="form-control" id="input_email"
                                        placeholder="Email" required name="email">
                             </div>
                         </div>

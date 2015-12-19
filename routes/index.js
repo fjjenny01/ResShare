@@ -90,13 +90,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/register', function(req, res, next) {
-    console.log(req.body)
     emailExistence.check(req.body.email, function(err, truth){
         if (truth) {
-            if (req.body.password != req.body.confirm_password) {
-                res.send({"success":true,"message":"ok","data":"password doesn't match, please try again"});
-                return;
-            }
             var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
             var uid = uuid.v1();
             var record = new User({
@@ -141,7 +136,6 @@ router.get('/register', function(req, res, next) {
 
 //user can't log in because he forgets password
 router.post('/forgot', function(req, res, next) {
-    console.log(req.body)
     emailExistence.check(req.body.email, function(err, truth) {
         if (!truth) res.send({"success":true,"message":"ok","data":"invalid email address"});
         User.findOne({email: req.body.email}, function (err, user) {

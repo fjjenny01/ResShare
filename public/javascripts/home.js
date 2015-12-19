@@ -88,24 +88,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 */
-function signup_submit(){
-    var email = $("#login_email").val();
-    var password = $("#login_password").val();
-    var textdata = {"email":email,"password":password};
+function signup_email_check(){
+    var username = $("#input_username").val();
+    var email = $("#input_email").val();
+    var password = $("#field_pwd1").val();
+    var confirm_password = $("#field_pwd2").val();
+    var textdata = {"username":username,"email":email,"password":password,"confirm_password":confirm_password};
     $.ajax({
-        url: "/login",
+        url: "/register",
         type: "POST",
         async: false,
         data: textdata,
         dataType: "json",
         success: function (data) {
-                alert(data.data);
+            alert(data.data);
         },
-        error: function(){
-            console.log("login error");
+        error: function(data){
+            return false
         }
     })
-
+ return false
 }
 
 function userlogin(){
@@ -144,11 +146,14 @@ function forget_password(){
         success: function (data) {
             console.log(data)
                 alert(data.data);
+            if(data.token){
+                console.log(data.token)
+                localStorage.setItem("ResToken",data.token)
+            }
 
         },
         error: function(){
-            console.log("login error")
-            ;      }
+            console.log("login error")}
     })
 
 }

@@ -90,10 +90,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/register', function(req, res, next) {
+    console.log(req.body)
     emailExistence.check(req.body.email, function(err, truth){
         if (truth) {
             if (req.body.password != req.body.confirm_password) {
-                res.send("password doesn't match, please try again");
+                res.send({"success":true,"message":"ok","data":"password doesn't match, please try again"});
                 return;
             }
             var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
@@ -114,7 +115,7 @@ router.post('/register', function(req, res, next) {
                     if (err.code == 11000) {
                         error = 'This email is already taken, please try another.';
                     }
-                    res.send(error);
+                    res.send({"success":false,"message":"ok","data":error});
                 }
                 else {
                     emailParams.Message.Subject.Data = 'Activate Your Account';
@@ -122,14 +123,14 @@ router.post('/register', function(req, res, next) {
                     emailParams.Message.Body.Text.Data =
                         'Please click on the following link to activate your account, or paste this into your browser to complete the process:' +
                         '(The link will expire after 24 hours)\n\n' +
-                        'http://' + req.headers.host + '/verify/?token=' + uid + '\n\n';
+                        'http://' + req.headers.host + '/verify/?token=' + token + '\n\n';
                     sendMail(emailParams);
-                    res.send("confirmation email has been sent");
+                    res.send({"success":true,"message":"ok","data":"confirmation email has been sent"});
                 }
             });
         }
         else {
-            res.send("invalid email address");
+            res.send({"success":true,"message":"ok","data":"invalid email address"});
         }
     });
 });
@@ -140,26 +141,27 @@ router.get('/register', function(req, res, next) {
 
 //user can't log in because he forgets password
 router.post('/forgot', function(req, res, next) {
+    console.log(req.body)
     emailExistence.check(req.body.email, function(err, truth) {
-        if (!truth) res.send("invalid email address");
+        if (!truth) res.send({"success":true,"message":"ok","data":"invalid email address"});
         User.findOne({email: req.body.email}, function (err, user) {
-            if (!user) res.send("No account with that email address exists.");
+            if (!user) res.send({"success":true,"message":"ok","data":"No account with that email address exists."});
             else {
                 if (user.status == 0) {
-                    res.send("Your account has not been activated, please go to activate your account");
+                    res.send({"success":true,"message":"ok","data":"Your account has not been activated, please go to activate your account"});
                     return;
                 }
                 var token = uuid.v1();
-                redisClient.set(token, req.body.uid);
+                redisClient.set(token, user.uid);
                 redisClient.expire(token, tokenExpire);//token will expire after 24 hours
                 emailParams.Message.Subject.Data = 'Reset The Password';
                 emailParams.Destination.ToAddresses.push(req.body.email);
                 emailParams.Message.Body.Text.Data = 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                     'Please click on the following link, or paste this into your browser to complete the process:(The link will expire after 24 hours)\n\n' +
-                    'http://' + req.headers.host + '/user/profile/password/edit/?token=' + uid + '\n\n' +
+                    'http://' + req.headers.host + '/user/profile/' + user.uid + '/admin?access_token=' + token + '\n\n' +
                     'If you did not request this, please ignore this email and your password will remain unchanged.\n';
                 sendMail(emailParams);
-                res.send("Reset password email has been sent");
+                res.send({"success":true,"message":"ok","data":"Reset password email has been sent", token: token});
             }
         });
     });
@@ -182,7 +184,7 @@ router.post('/resend', function(req, res, next) {
             emailParams.Message.Body.Text.Data =
                 'Please click on the following link to activate your account, or paste this into your browser to complete the process:' +
                 '(The link will expire after 24 hours)\n\n' +
-                'http://' + req.headers.host + '/verify/?token=' + uid + '\n\n';
+                'http://' + req.headers.host + '/verify/?access_token=' + uid + '\n\n';
             sendMail(emailParams);
             res.send("confirmation email has been sent");
         });
@@ -191,19 +193,20 @@ router.post('/resend', function(req, res, next) {
 
 
 router.post('/login', function(req, res) {
+    console.log(req.body)
     User.findOne({ email: req.body.email }, function(err, user) {
         if (!user)
-            res.send("Incorrect email or password.");
+            res.send({"success":true,"message":"ok","data":"Incorrect email or password."});
         else {
-            if (user.status == 0) res.send("Your account has not been activated, please go to activate your account");
+            if (user.status == 0) res.send({"success":true,"message":"ok","data":"Your account has not been activated, please go to activate your account"});
             else if (bcrypt.compareSync(req.body.password, user.password)) {
                 var token = uuid.v1();
                 redisClient.set(token, req.body.email);
                 redisClient.expire(token, actionExpire);//token will expire after 15 minutes
-                res.render('user', {token: token});
+                res.send({"success":true,"message":"ok","data":{page:'user', "token": token}});
             }
             else
-                res.send("Incorrect email or password.");
+                res.send({"success":true,"message":"ok","data":"Incorrect email or password."});
         }
     });
 });

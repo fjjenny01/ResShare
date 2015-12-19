@@ -136,6 +136,7 @@ router.post('/profile/password/edit', tokenAuth.requireToken, function (req, res
     });
 });
 
+
 router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, next) {
     User.update({uid: req.user.uid}, {$set: JSON.parse(req.body.user)}, function (err, data) {
         if (err) throw err;

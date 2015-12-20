@@ -194,7 +194,9 @@ router.get('/profile/:uid/topic/data', tokenAuth.requireToken, function(req, res
     });
 });
 
+
 router.get('/profile/:uid/notification/data', tokenAuth.requireToken, function(req, res, next) {
+    var message = [];
     sqsGetParams.QueueName = req.params.uid;
     var sqsRecieveParams = {
         QueueUrl: ''
@@ -202,8 +204,23 @@ router.get('/profile/:uid/notification/data', tokenAuth.requireToken, function(r
     sqs.getQueueUrl(sqsGetParams, function(err, data) {
         if (err) throw err;
         sqsRecieveParams.QueueUrl = data.QueueUrl;
-        sqs.receiveMessage(sqsRecieveParams, function(err, data) {
-            res.send(data.Messages);
+        var params = {
+            QueueUrl: data.QueueUrl,
+            AttributeNames: ['ApproximateNumberOfMessages']
+        };
+        sqs.getQueueAttributes(params, function(err, data) {
+            if (err) throw err;
+            var num = data.Attributes.ApproximateNumberOfMessages;
+
+            for (var i = 0; i < num; i++) {
+                sqs.receiveMessage(sqsRecieveParams, function(err, data) {
+                    message.push(data.Messages);
+                    check(message)
+                });
+            }
+            function check(message){
+                if (message.length >= num) res.send(message);
+            }
         });
     });
 });

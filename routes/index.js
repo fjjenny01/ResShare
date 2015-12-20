@@ -194,7 +194,7 @@ router.post('/resend', function(req, res, next) {
 
 
 router.post('/login', function(req, res) {
-    console.log(req.body)
+    console.log(req.body);
     User.findOne({ email: req.body.email }, function(err, user) {
         if (!user)
             res.send({"success":true,"message":"ok","data":"Incorrect email or password."});

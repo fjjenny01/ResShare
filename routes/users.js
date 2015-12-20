@@ -27,24 +27,9 @@ var sendMail = function(emailParams) {
 };
 
 
-var sendMessageToQueue = function (sqsGetParams, sqsSendParams, author_id, reviewer_id, reviewee_id, subject, link) {
-    sqs.getQueueUrl(sqsGetParams, function(err, data) {
-        if (err) throw err;
-        sqsSendParams.QueueUrl = data.QueueUrl;
-        var obj = {
-            author: author_id,
-            reviewer: reviewer_id,
-            reviewee: reviewee_id,
-            subject: subject,
-            link: link
-        };
-        sqsSendParams.MessageBody = JSON.stringify(obj);
-        sqs.sendMessage(sqsSendParams, function (err, data) {
-            if (err) throw err;
-        });
-    });
+var sqsGetParams = {
+    QueueName: ""
 };
-
 
 
 
@@ -210,21 +195,31 @@ router.get('/profile/:uid/topic/data', tokenAuth.requireToken, function(req, res
 });
 
 router.get('/profile/:uid/notification/data', tokenAuth.requireToken, function(req, res, next) {
+    sqsGetParams.QueueName = req.params.uid;
     var sqsRecieveParams = {
-        QueueUrl: req.params.uid
+        QueueUrl: ''
     };
-    sqs.receiveMessage(sqsRecieveParams, function(err, data) {
-        res.send(data.Messages);
+    sqs.getQueueUrl(sqsGetParams, function(err, data) {
+        if (err) throw err;
+        sqsRecieveParams.QueueUrl = data.QueueUrl;
+        sqs.receiveMessage(sqsRecieveParams, function(err, data) {
+            res.send(data.Messages);
+        });
     });
 });
 
 router.post('/profile/:uid/notification/check', tokenAuth.requireToken, function(req, res, next) {
     var sqsDeleteParams = {
-        QueueUrl: req.params.uid,
+        QueueUrl: '',
         ReceiptHandle: req.body.receiptHandle
     };
-    sqs.deleteMessage(sqsDeleteParams, function(err, data) {
+    sqsGetParams.QueueName = req.params.uid;
+    sqs.getQueueUrl(sqsGetParams, function(err, data) {
         if (err) throw err;
+        sqsDeleteParams.QueueUrl = data.QueueUrl;
+        sqs.deleteMessage(sqsDeleteParams, function(err, data) {
+            if (err) throw err;
+        });
     });
 });
 

@@ -15,7 +15,7 @@ res_list = [{"username":"jingxiao", "link":"www.google.com", "subject":"HelloHel
 var prof_fields = ["email", "company"];
 //var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
 
-localStorage.setItem("ResToken", "qwertyuiop");
+//localStorage.setItem("ResToken", "qwertyuiop");
 console.log(localStorage.getItem("ResToken"));
 
 $.ajax({

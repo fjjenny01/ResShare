@@ -50,7 +50,8 @@ var sendMessageToQueue = function (sqsGetParams, sqsSendParams, author_id, revie
 
 /****************************** News Page ***********************************/
 
-router.get('/', /*tokenAuth.requireToken,*/ function (req, res, next) {
+router.get('/', tokenAuth.requireToken, function (req, res, next) {
+    console.log("sd")
     res.render('user');
 });
 
@@ -158,6 +159,7 @@ router.post('/profile/password/edit', tokenAuth.requireToken, function (req, res
         }
     });
 });
+
 
 router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, next) {
     User.update({uid: req.user.uid}, {$set: JSON.parse(req.body.user)}, function (err, data) {

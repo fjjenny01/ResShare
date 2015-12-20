@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<!-- saved from url=(0031)https://bootswatch.com/journal/ -->
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>ResShare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../../stylesheets/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="../../../stylesheets/custom2.min.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
+    <script src="../bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" async="" src="https://ssl.google-analytics.com/ga.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="../../../javascripts/home.js"></script>
+    <script src="../../../javascripts/bootstrap.min.js"></script>
+    <script src="../../../javascripts/custom.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="/" class="navbar-brand">ResShare</a>
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form class="navbar-form navbar-left" role="search"  action="" onsubmit="return userlogin() ">
+                        <div class="form-group">
+                            <input id="login_email" name="email" type="email" class="form-control" placeholder="Email" required>
+                            <input  id="login_password" name="password" type="password" class="form-control" placeholder="Password" required>
+                        </div>
+                        <button type="button"  onclick="userlogin()" class="btn btn-default">Login</button>
+                        <button type="button" class="btn btn-primary" onclick="forget_password()" >forgot password</button>
+                    </form>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="bs-docs-section">
+        <div class="row">
+            <div id="myCarousel" class="carousel slide">
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <img src="../../../images/newjob.jpg" align="buttom">
+
+                        <div class="container">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img src="http://lorempixel.com/1500/800/abstract/1">
+
+                        <div class="container">
+                            <div class="carousel-caption">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img src="../../../images/job.jpg">
+
+                        <div class="container">
+                            <div class="carousel-caption">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="searchForm" class="col-sm-12"
+                      onsubmit="return signup_email_check();">
+                    <div class="form-group col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4">
+                        <div class="form-group login">
+                            <label for="inputUsername" class=" control-label">Username</label>
+
+                            <div>
+                                <input name="username" type="text" class="form-control" id="input_username"
+                                       placeholder="Username" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group login">
+                            <label for="inputEmail" class=" control-label">Email</label>
+
+                            <div>
+                                <input type="email" class="form-control" id="input_email"
+                                       placeholder="Email" required name="email">
+                            </div>
+                        </div>
+                        <div class="form-group login">
+                            <label for="inputPassword" class="control-label">Password</label>
+
+                            <div>
+                                <input placeholder="Password" id="field_pwd1" class="form-control"
+                                       title="Password must contain at least 6 characters, including UPPER/lowercase and numbers."
+                                       type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                                       name="password">
+                            </div>
+                        </div>
+                        <div class="form-group signup" id="confirmPassword">
+                            <label for="inputPassword" class="control-label">Confirm Password</label>
+
+                            <div>
+                                <input placeholder="Confirm Password" id="field_pwd2" class="form-control"
+                                       title="Please enter the same Password as above." type="password" required
+                                       pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" name="confirm_password">
+
+                            </div>
+                        </div>
+                        <div>
+                            <button id="signbutton" class="btn btn-primary">SignUp</button>
+                        </div>
+
+                    </div>
+
+                </form>
+
+
+                <!-- Controls -->
+                <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+
+                </a>
+                <a class="right carousel-control" href="#myCarousel" data-slide="next">
+
+                </a>
+            </div>
+            <!-- /.carousel -->
+
+        </div>
+
+    </div>
+</div>
+<div class="container">
+    <div class="bs-docs-section">
+        <div class="row">
+            <blockquote>
+                <p> I am a M.S. student majored in computer science. I applied and interviewed for internships and full-time jobs to no avail. I started using ResShare 1 months ago. In this short period, My resume is greatly improved. The reward is two
+                    interviews with Facebook and Google.</p>
+                <small>ZiChen Chao <cite title="Source Title">ResShare User</cite></small>
+            </blockquote>
+            <blockquote>
+                <p>ResShare is a professional P2P resume comment and business networking platform. It can make you be the right people.</p>
+                <small>Jingxiao Gu <cite title="Source Title">Founder of ResShare </cite></small>
+            </blockquote>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

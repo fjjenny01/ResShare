@@ -4,6 +4,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var redis = require('redis');
+var elasticsearch = require('elasticsearch');
+
 
 //connect to DB
 var dbUrl = 'mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare';
@@ -21,6 +23,19 @@ client.on('connect', function() {
     console.log('connected to redis');
 });
 
+
+//connect to elasticsearch
+var elsClient = new elasticsearch.Client({
+    host: '52.90.198.176:9200',
+    log: 'trace'
+});
+
+
+
+
+
+module.exports.elsClient = elsClient;
+
 module.exports.user = mongoose.model('user', new Schema({
     username: String,
     firstname: String,
@@ -33,6 +48,26 @@ module.exports.user = mongoose.model('user', new Schema({
     interested_field: [String],
     avatar: {url: String, aid: String}
 }));
+
+
+//var commentJSON = {
+//    author_id: ,
+//    current_user_id: ,
+//
+//    //id: 'c' +  (this.getComments().length + 1),   // Temporary id
+//    parent: textarea.attr('data-parent') || null,
+//    created: time,
+//    modified: time,
+//    content: this.getTextareaContent(textarea),
+//    fullname: ,
+//    //fullname: this.options.textFormatter(this.options.youText),
+//    link: ,
+//    profilePictureURL: ,
+//    //profilePictureURL: this.options.profilePictureURL,
+//    createdByCurrentUser: true,
+//    upvoteCount: 0,
+//    userHasUpvoted: false
+//};
 
 
 module.exports.resume = mongoose.model('resume', new Schema({
@@ -48,10 +83,19 @@ module.exports.resume = mongoose.model('resume', new Schema({
     tag: [String],
     status: Number,
     comments: [{
-        reviewer_name: String,
-        reviewee_name: String,
-        author_name: String,
-        comment: String
+        author_id: String,
+        current_user_id: String,
+        parent: String,
+        created: String,
+        modified: String,
+        content: String,
+        fullname: String,
+        link: String,
+        subject: String,
+        profilePictureURL: String,
+        createdByCurrentUser: true,
+        upvoteCount: 0,
+        userHasUpvoted: false
     }]
 }).index({username: "text", subject: "text", tag: "text"}));
 

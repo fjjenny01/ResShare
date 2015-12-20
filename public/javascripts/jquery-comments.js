@@ -5,6 +5,87 @@
 //     For all details and documentation:
 //     http://viima.github.io/jquery-comments/
 
+
+/**
+ * Created by jinfang on 12/19/15.
+ */
+//var url = "";
+var author_id = "";
+var current_user_id = "";
+var link = "";
+var fullname = "";
+var profile_picture_url ="";
+$( document ).ready(function() {
+
+    //console.log(typeof window.location.href );
+    //TODO
+    var rid = window.location.href.split("/").pop();
+    var pageUrl = "/resume/"+rid+"/data"
+    console.log(pageUrl);
+
+    localStorage.setItem("ResToken", "qwertyuiop");
+    var url = "";
+    $.ajax({
+        url: pageUrl,
+        type: "GET",
+        data: {"access_token": localStorage.getItem("ResToken")},
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            url = data["resume"]['url'];
+            console.log(url);
+            subject = data['resume']['subject'];
+            content = data['resume']['content'];
+
+
+            author_id = data["resume"]["uid"];
+            current_user_id = data["current_user_id"];
+            link = data["resume"]["link"];
+            fullname = data["current_user_name"];
+            profile_picture_url = data["resume"]["avatar"]['url'];
+            console.log(author_id);
+            console.log(current_user_id);
+            console.log(link);
+            console.log(fullname);
+            console.log(profile_picture_url);
+
+
+
+            initialize(url);
+        }
+    });
+
+    //load the profile pic of current user
+    $.ajax({
+        url: "/user/data",
+        type: "GET",
+        async: false,
+        data: {"access_token": localStorage.getItem("ResToken")},
+        dataType: "json",
+        success: function (data) {
+            user_data = data["user"];
+            console.log(user_data);
+            //loadProfile(user_data);
+        }
+    });
+
+});
+
+
+function initialize(url){
+    var preview  = document.getElementById("organigram-iFrame");
+    var src = "http://docs.google.com/gview?"+"url="+ url+ "&embedded=true";
+    console.log(url);
+    preview.setAttribute('src',src);
+
+}
+
+
+
+
+
+
+
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -90,12 +171,15 @@
             maxRepliesVisible: 2,
 
             fieldMappings: {
+                author_id: 'author_id',
                 id: 'id',
                 parent: 'parent',
                 created: 'created',
                 modified: 'modified',
                 content: 'content',
                 fullname: 'fullname',
+                subject: 'subject',
+                link: 'link',
                 profilePictureURL: 'profile_picture_url',
                 createdByAdmin: 'created_by_admin',
                 createdByCurrentUser: 'created_by_current_user',
@@ -333,7 +417,7 @@
                 // Update toggle all -button
                 this.updateToggleAllButton(outerMostParent);
 
-            // Case: main level comment
+                // Case: main level comment
             } else {
                 commentList.prepend(commentEl);
             }
@@ -408,7 +492,7 @@
                 // Update the text of toggle all -button
                 this.setToggleAllButtonText(toggleAllButton, false);
 
-            // Make sure that toggle all button is not present
+                // Make sure that toggle all button is not present
             } else {
                 toggleAllButton.remove();
             }
@@ -439,7 +523,7 @@
                     }
                 });
 
-            // Sort by date
+                // Sort by date
             } else {
                 comments.sort(function(commentA, commentB) {
                     var createdA = new Date(commentA.created).getTime();
@@ -551,7 +635,7 @@
                         textarea.attr('data-parent', parentId);
                     }
 
-                // Case: new comment
+                    // Case: new comment
                 } else {
                     var parentId = textarea.parents('li.comment').last().data('id');
                     textarea.attr('data-parent', parentId);
@@ -610,14 +694,28 @@
             sendButton.removeClass('enabled');
 
             var time = new Date().toISOString();
+
+            console.log('PPPPPPPPPPPPPPPPPPPPPPPP');
+            console.log(author_id);
+            console.log(current_user_id);
+            console.log(fullname);
+            console.log(link);
+            console.log(profile_picture_url);
             var commentJSON = {
-                id: 'c' +  (this.getComments().length + 1),   // Temporary id
+                author_id: author_id,
+                current_user_id:current_user_id ,
+
+                //id: 'c' +  (this.getComments().length + 1),   // Temporary id
                 parent: textarea.attr('data-parent') || null,
                 created: time,
                 modified: time,
                 content: this.getTextareaContent(textarea),
-                fullname: this.options.textFormatter(this.options.youText),
-                profilePictureURL: this.options.profilePictureURL,
+                fullname: fullname,
+                //fullname: this.options.textFormatter(this.options.youText),
+                link: link,
+                subject: subject,
+                //profilePictureURL: ,
+                profilePictureURL: profile_picture_url,
                 createdByCurrentUser: true,
                 upvoteCount: 0,
                 userHasUpvoted: false

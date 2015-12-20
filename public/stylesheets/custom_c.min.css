@@ -62,9 +62,7 @@ body{padding-top:50px}body>.navbar{-webkit-transition:background-color 300ms eas
   margin: .25em;
 }
 
-<<<<<<< HEAD
 .highlight { background: yellow; }
-=======
 .btn-file {
     position: relative;
     overflow: hidden;
@@ -84,4 +82,4 @@ body{padding-top:50px}body>.navbar{-webkit-transition:background-color 300ms eas
     cursor: inherit;
     display: block;
 }
->>>>>>> c4db6e047a0f78ac4679dcf9aef35c42f753655e
+

@@ -1,11 +1,10 @@
 var hasChosen = false;  //if user has chosen the file to upload
 var hasSelected = false;  //if user has selected one of the resume in the list
-var tags = [];
-var resumelist=  [];
-var selected = -1;
+var tags = [];  //the tags of the selected resume
+var resumelist=  []; //the resume list of the current user
+var selected = -1; //the index of the selected resume
 
 $( document ).ready(function() {
-
   //load resume list
   localStorage.setItem("ResToken", "qwertyuiop");
   $.ajax({
@@ -14,10 +13,7 @@ $( document ).ready(function() {
     data: {"access_token": localStorage.getItem("ResToken")},
     dataType: "json",
     success: function (data) {
-      //alert(data.length);
-      //alert(data.toString())
       console.log(data);
-      //console.log(data[0]["resumename"]);
       for (var i=0;i<data.length;i++){
         resumelist.push(data[i]["resumename"]);
         resumelist.push(data[i]["rid"]);
@@ -25,9 +21,21 @@ $( document ).ready(function() {
         resumelist.push(data[i]["status"]);
       }
 
-      //console.log(resumelist.length);
-
       initializeResumeList();
+    }
+  });
+
+  //load the profile pic of current user
+  $.ajax({
+    url: "/user/data",
+    type: "GET",
+    async: false,
+    data: {"access_token": localStorage.getItem("ResToken")},
+    dataType: "json",
+    success: function (data) {
+      user_data = data["user"];
+      console.log(user_data);
+      loadProfile(user_data);
     }
   });
 
@@ -63,8 +71,8 @@ function initializeResumeList(){
 
 }
 
+//add resume to be upload
 function addResume(){
-  //alert("on change");
   var input = document.getElementById("add_btn");
   if (input.files[0].name!=null){
 
@@ -75,6 +83,7 @@ function addResume(){
 
 }
 
+  //commit upload
   function uploadResume() {
     if (hasChosen) {
 
@@ -135,7 +144,7 @@ function addResume(){
 
 
 
-
+  //delete the resume from database
   function deleteResume() {
     if (hasSelected && selected>-1) {
 
@@ -152,22 +161,14 @@ function addResume(){
         }
       });
 
-      //update the UI
-      //console.log("selected");
-      //console.log(selected);
-      //console.log(resumelist);
       resumelist.splice(selected*4,4);
-      //console.log(resumelist.length);
 
       initializeResumeList();
 
+      //set the iframe to something unaccessible
       var preview = document.getElementById("organigram-iFrame");
-
       var url = resumelist[selected*4+2];
-      //console.log("url");
-      //console.log(url);
       var src = "http://docs.google.com/gview?url=https://s3.amazonaws.com/resumefiles/resume_JINFANG.pdf&embedded=true";
-      //console.log(src);
       preview.setAttribute('src',src);
 
     }
@@ -178,9 +179,8 @@ function addResume(){
 
   }
 
+  //when user click on the certain row of the table of the resume list
   function selectResume() {
-
-
       /* Get all rows from your 'table' but not the first one
        * that includes headers. */
       var rows = $('tr');
@@ -203,7 +203,6 @@ function addResume(){
           row.addClass('highlight');
         }
 
-
         console.log(row["context"]);
         var row_id = row["context"].getAttributeNode("id").value;
         console.log('row_id');
@@ -211,12 +210,12 @@ function addResume(){
 
         selected =row_id-1;
         hasSelected=true;
-        //update the preview
-        var preview = document.getElementById("organigram-iFrame");
 
+        //update the iframe
+        var preview = document.getElementById("organigram-iFrame");
         var url = resumelist[selected*4+2];
-        //console.log("url");
-        //console.log(url);
+        console.log("url");
+        console.log(url);
         var src = "http://docs.google.com/gview?"+"url="+ url+ "&embedded=true";
         //console.log(src);
         preview.setAttribute('src',src);
@@ -237,20 +236,18 @@ function addResume(){
 
   }
 
+  //show the tag modal to user before commit share
   function shareResume() {
     if (hasSelected && selected > -1){
-
-
       $('#share_resume_modal').modal('show');
-
       var fileName = document.getElementById("fileName");
       fileName.innerHTML = resumelist[selected*4];
-
     }
 
 
   }
 
+//commit share
 function commitShare(){
 
   var fileName = document.getElementById("fileName");
@@ -279,29 +276,11 @@ function commitShare(){
     document.getElementById("subject").value = "";
     document.getElementById("content").value = "";
 
-
-
   }
 
 }
 
-
-  function generateUUID() {
-    var d = new Date().getTime();
-    if (window.performance && typeof window.performance.now === "function") {
-      d += performance.now();
-      ; //use high-precision timer if available
-    }
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = (d + Math.random() * 16) % 16 | 0;
-      d = Math.floor(d / 16);
-      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-    return uuid;
-  }
-
-
-
+//save the tags of current selected resume
 function saveTags(){
   $('#tag_checkbox input:checkbox').each(function () {
     var sThisVal = (this.checked ? $(this).next('label').text() : "");
@@ -324,6 +303,24 @@ function uncheckTags(){
   });
 
 }
+
+  //create uuid for resume name
+  function generateUUID() {
+    var d = new Date().getTime();
+    if (window.performance && typeof window.performance.now === "function") {
+      d += performance.now();
+      ; //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    return uuid;
+  }
+
+
+
 
 
 function displayReply()
@@ -359,8 +356,12 @@ function displayReply()
   var data = $('textarea.noscroll').val();
   $('textarea.noscroll').focus().val('').val(data);
 
-
-
 }
 
+//load profile picture of the current user
+function loadProfile(user_data){
+  var prof_tb = document.getElementById("user_prof_pic");
+  prof_tb.src = user_data["avatar"]["url"];
+  console.log(prof_tb.src);
 
+}

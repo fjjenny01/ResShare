@@ -122,6 +122,7 @@ function userlogin(){
         dataType: "json",
         success: function (data) {
             if(data.data.page){
+                 console.log(data.data.page)
                 localStorage.setItem("ResToken",data.data.token)
                 window.location.href=data.data.page+'?access_token='+data.data.token;
 

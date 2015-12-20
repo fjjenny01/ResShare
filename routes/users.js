@@ -6,6 +6,9 @@ var tokenAuth = require('../middleware/tokenAuth');
 var awsconfig = require('../config/awsconfig');
 var aws = require('aws-sdk');
 var bcrypt = require('bcryptjs');
+var http = require('http');
+var elasticSearchClient = require('../model/dbModel').elsClient;
+
 
 
 var ses = new aws.SES();
@@ -24,24 +27,9 @@ var sendMail = function(emailParams) {
 };
 
 
-var sendMessageToQueue = function (sqsGetParams, sqsSendParams, author_id, reviewer_id, reviewee_id, subject, link) {
-    sqs.getQueueUrl(sqsGetParams, function(err, data) {
-        if (err) throw err;
-        sqsSendParams.QueueUrl = data.QueueUrl;
-        var obj = {
-            author: author_id,
-            reviewer: reviewer_id,
-            reviewee: reviewee_id,
-            subject: subject,
-            link: link
-        };
-        sqsSendParams.MessageBody = JSON.stringify(obj);
-        sqs.sendMessage(sqsSendParams, function (err, data) {
-            if (err) throw err;
-        });
-    });
+var sqsGetParams = {
+    QueueName: ""
 };
-
 
 
 
@@ -72,10 +60,30 @@ router.get('/data', tokenAuth.requireToken, function (req, res, next) {
 //search
 //url: /user/search/?kw=xxx
 router.post('/search', tokenAuth.requireToken, function(req, res, next) {
-    Resume.find({$text: {$search: req.query.kw}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})
-        .exec(function (err, data) {
-            res.send(data);
-        });
+    //Resume.find({$text: {$search: req.query.kw}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})
+    //    .exec(function (err, data) {
+    //        res.send(data);
+    //    });
+    console.log(req.query.kw);
+    elasticSearchClient.search({
+        index: 'reshare',
+        body: {
+            query: {
+                multi_match: {
+                    query: req.query.kw,
+                    fields: ['subject', 'content','tag'],
+                    operator: 'or',
+                    fuzziness: 'AUTO'
+                }
+            }
+        }
+    }, function (error, response) {
+        var array = [];
+        for (var i = 0; i < response.hits.hits.length; i++) {
+            array[i] = response.hits.hits[i]._source;
+        }
+        res.send(array);
+    });
 });
 
 
@@ -144,11 +152,35 @@ router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, ne
         if (req.user.username != JSON.parse(req.body.user).username) {
             Resume.update({uid: req.user.uid}, {username: JSON.parse(req.body.user).username}, function (err, data) {
                 if (err) throw err;
+                Resume.findOne({uid: req.user.uid}, function (err, resume) {
+                    elasticSearchClient.update({
+                        index: 'reshare',
+                        type: 'resume',
+                        id: resume.rid,
+                        body: {
+                            doc: {
+                                username: JSON.parse(req.body.user).username
+                            }
+                        }},function(err, res) {
+                    });
+                });
             });
         }
         if (req.user.avatar != JSON.parse(req.body.user).avatar) {
             Resume.update({uid: req.user.uid}, {avatar: JSON.parse(req.body.user).avatar}, function (err, data) {
                 if (err) throw err;
+                Resume.findOne({uid: req.user.uid}, function (err, resume) {
+                    elasticSearchClient.update({
+                        index: 'reshare',
+                        type: 'resume',
+                        id: resume.rid,
+                        body: {
+                            doc: {
+                                avatar: JSON.parse(req.body.user).avatar
+                            }
+                        }},function(err, res) {
+                    });
+                });
             });
         }
     });
@@ -162,22 +194,49 @@ router.get('/profile/:uid/topic/data', tokenAuth.requireToken, function(req, res
     });
 });
 
+
 router.get('/profile/:uid/notification/data', tokenAuth.requireToken, function(req, res, next) {
+    var message = [];
+    sqsGetParams.QueueName = req.params.uid;
     var sqsRecieveParams = {
-        QueueUrl: req.params.uid
+        QueueUrl: ''
     };
-    sqs.receiveMessage(sqsRecieveParams, function(err, data) {
-        res.send(data.Messages);
+    sqs.getQueueUrl(sqsGetParams, function(err, data) {
+        if (err) throw err;
+        sqsRecieveParams.QueueUrl = data.QueueUrl;
+        var params = {
+            QueueUrl: data.QueueUrl,
+            AttributeNames: ['ApproximateNumberOfMessages']
+        };
+        sqs.getQueueAttributes(params, function(err, data) {
+            if (err) throw err;
+            var num = data.Attributes.ApproximateNumberOfMessages;
+
+            for (var i = 0; i < num; i++) {
+                sqs.receiveMessage(sqsRecieveParams, function(err, data) {
+                    message.push(data.Messages);
+                    check(message)
+                });
+            }
+            function check(message){
+                if (message.length >= num) res.send(message);
+            }
+        });
     });
 });
 
 router.post('/profile/:uid/notification/check', tokenAuth.requireToken, function(req, res, next) {
     var sqsDeleteParams = {
-        QueueUrl: req.params.uid,
+        QueueUrl: '',
         ReceiptHandle: req.body.receiptHandle
     };
-    sqs.deleteMessage(sqsDeleteParams, function(err, data) {
+    sqsGetParams.QueueName = req.params.uid;
+    sqs.getQueueUrl(sqsGetParams, function(err, data) {
         if (err) throw err;
+        sqsDeleteParams.QueueUrl = data.QueueUrl;
+        sqs.deleteMessage(sqsDeleteParams, function(err, data) {
+            if (err) throw err;
+        });
     });
 });
 
@@ -220,12 +279,22 @@ router.get('/resume/aws/data', tokenAuth.requireToken, function (req, res, next)
 
 //delete a resume
 router.post('/resume/delete', tokenAuth.requireToken, function (req, res, next) {
-    Resume.remove({rid: req.body.rid});
+    Resume.remove({rid: req.body.rid}, function (err, res) {
+        if (err) throw err;
+        if (req.body.status == 1) {
+            elasticSearchClient.delete({
+                index: 'reshare',
+                type: 'resume',
+                id: req.body.rid
+            }, function (error, response) {
+            });
+        }
+    });
 });
 
 //share resume
 router.post('/resume/share', tokenAuth.requireToken, function (req, res, next) {
-    var link = "/resume/" + req.body.rid;
+    var link = req.headers.host + "/resume/" + req.body.rid;
     Resume.update({rid: req.body.rid}, {$set: {
         link: link,
         subject: req.body.subject,
@@ -233,50 +302,61 @@ router.post('/resume/share', tokenAuth.requireToken, function (req, res, next) {
         status: 1
     }}, function (err) {
         if (err) throw err;
+        Resume.findOne({rid: req.body.rid}, function (err, resume) {
+            resume._id = undefined;
+            elasticSearchClient.create({
+                index: 'reshare',
+                type: 'resume',
+                id: req.body.rid,
+                body: resume
+            }, function (err, res) {
+            });
+        });
     });
 });
 
-//add a comment
 
-var sqsSendParams = {
-    QueueUrl: "",
-    MessageAttributes: {
-        someKey: { DataType: 'String', StringValue: "string"}
-    }
-};
 
-var sqsGetParams = {
-    QueueName: ""
-};
-
-router.post('/resume/comment', tokenAuth.requireToken, function(req, res, next) {
-    Resume.update({rid: req.body.rid}, {
-        $push: {
-            comments:{uid: req.user.uid, comment: req.body.comment}
-        }
-    }, function (err, data) {
-        if (err) throw err;
-        sqsGetParams.QueueName = req.body.reviewee_id;
-        sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
-            req.body.subject, req.body.link);
-        if (req.body.author_id != req.body.reviewee_id) {
-            sqsGetParams.QueueName = req.body.author_id;
-            sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
-                req.body.subject, req.body.link);
-        }
-    });
-});
-
-//delete a comment
-router.delete('/resume/comment', tokenAuth.requireToken, function(req, res, next) {
-    Resume.update({rid: req.body.rid}, {
-        $pull: {
-            comments: {uid: req.user.uid, comment: req.body.comment}
-        }
-    }, function (err, data) {
-        if (err) throw err;
-    });
-});
+////add a comment
+//var sqsSendParams = {
+//    QueueUrl: "",
+//    MessageAttributes: {
+//        someKey: { DataType: 'String', StringValue: "string"}
+//    }
+//};
+//
+//var sqsGetParams = {
+//    QueueName: ""
+//};
+//
+//router.post('/resume/comment', tokenAuth.requireToken, function(req, res, next) {
+//    Resume.update({rid: req.body.rid}, {
+//        $push: {
+//            comments:{uid: req.user.uid, comment: req.body.comment}
+//        }
+//    }, function (err, data) {
+//        if (err) throw err;
+//        sqsGetParams.QueueName = req.body.reviewee_id;
+//        sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
+//            req.body.subject, req.body.link);
+//        if (req.body.author_id != req.body.reviewee_id) {
+//            sqsGetParams.QueueName = req.body.author_id;
+//            sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
+//                req.body.subject, req.body.link);
+//        }
+//    });
+//});
+//
+////delete a comment
+//router.delete('/resume/comment', tokenAuth.requireToken, function(req, res, next) {
+//    Resume.update({rid: req.body.rid}, {
+//        $pull: {
+//            comments: {uid: req.user.uid, comment: req.body.comment}
+//        }
+//    }, function (err, data) {
+//        if (err) throw err;
+//    });
+//});
 
 
 

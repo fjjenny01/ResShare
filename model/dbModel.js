@@ -50,6 +50,26 @@ module.exports.user = mongoose.model('user', new Schema({
 }));
 
 
+//var commentJSON = {
+//    author_id: ,
+//    current_user_id: ,
+//
+//    //id: 'c' +  (this.getComments().length + 1),   // Temporary id
+//    parent: textarea.attr('data-parent') || null,
+//    created: time,
+//    modified: time,
+//    content: this.getTextareaContent(textarea),
+//    fullname: ,
+//    //fullname: this.options.textFormatter(this.options.youText),
+//    link: ,
+//    profilePictureURL: ,
+//    //profilePictureURL: this.options.profilePictureURL,
+//    createdByCurrentUser: true,
+//    upvoteCount: 0,
+//    userHasUpvoted: false
+//};
+
+
 module.exports.resume = mongoose.model('resume', new Schema({
     uid: String,
     username: String,
@@ -63,10 +83,19 @@ module.exports.resume = mongoose.model('resume', new Schema({
     tag: [String],
     status: Number,
     comments: [{
-        reviewer_id: String,
-        reviewer_name: String,
-        reviewer_avatar: String,
-        comment: String
+        author_id: String,
+        current_user_id: String,
+        parent: String,
+        created: String,
+        modified: String,
+        content: String,
+        fullname: String,
+        link: String,
+        subject: String,
+        profilePictureURL: String,
+        createdByCurrentUser: true,
+        upvoteCount: 0,
+        userHasUpvoted: false
     }]
 }).index({username: "text", subject: "text", tag: "text"}));
 

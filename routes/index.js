@@ -43,16 +43,15 @@ var createQueue = function (sqsCreateParams) {
 };
 
 
-var sendMessageToQueue = function (sqsGetParams, sqsSendParams, author_id, reviewer_id, reviewee_id, subject, link) {
+
+var sendMessageToQueue = function (sqsGetParams, sqsSendParams, reviewee_name, subject, link) {
     sqs.getQueueUrl(sqsGetParams, function(err, data) {
         if (err) throw err;
         sqsSendParams.QueueUrl = data.QueueUrl;
         var obj = {
-            author: author_id,
-            reviewer: reviewer_id,
-            reviewee: reviewee_id,
-            subject: subject,
-            link: link
+            "from": reviewee_name,
+            "subject": subject,
+            "link": link
         };
         sqsSendParams.MessageBody = JSON.stringify(obj);
         sqs.sendMessage(sqsSendParams, function (err, data) {
@@ -232,10 +231,14 @@ router.get('/resume/:rid', tokenAuth.requireToken, function (req, res, next) {
 
 
 router.get('/resume/:rid/data', tokenAuth.requireToken, function (req, res, next) {
-    Resume.find({rid: req.params.rid}, function (err, data) {
-        res.send(data);
+    Resume.findOne({rid: req.params.rid}, function (err, resume) {
+        res.send({resume: resume, current_user_id: req.user.uid, current_user_name: req.user.username});
     });
 });
+
+
+
+
 
 //add a comment
 var sqsSendParams = {
@@ -251,28 +254,30 @@ var sqsGetParams = {
 
 
 router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, next) {
+    var comment = JSON.parse(req.body);
     Resume.update({rid: req.params.rid}, {
         $push: {
-            comments:{uid: req.user.uid, comment: req.body.comment}
+            comments: comment
         }
     }, function (err, data) {
         if (err) throw err;
-        sqsGetParams.QueueName = req.body.reviewee_id;
-        sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
-        req.body.subject, req.body.link);
-        if (req.body.author_id != req.body.reviewee_id) {
-            sqsGetParams.QueueName = req.body.author_id;
-            sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
-                req.body.subject, req.body.link);
+
+        //notify author and reviewee
+        sqsGetParams.QueueName = comment.author_id;
+        sendMessageToQueue(sqsGetParams, sqsSendParams, comment.author_id, comment.subject, comment.link);
+        if (comment.parent != '') {
+            sqsGetParams.QueueName = comment.parent;
+            sendMessageToQueue(sqsGetParams, sqsSendParams, comment.parent, comment.subject, comment.link);
         }
     });
 });
 
 //delete a comment
 router.delete('/resume/:rid/comment', tokenAuth.requireToken, function(req, res, next) {
+    var comment = JSON.parse(req.body);
     Resume.update({rid: req.params.rid}, {
         $pull: {
-            comments: {uid: req.user.uid, comment: req.body.comment}
+            comments: comment
         }
     }, function (err, data) {
         if (err) throw err;
@@ -283,3 +288,6 @@ router.delete('/resume/:rid/comment', tokenAuth.requireToken, function(req, res,
 
 
 module.exports = router;
+
+
+

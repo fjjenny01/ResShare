@@ -294,7 +294,7 @@ router.post('/resume/delete', tokenAuth.requireToken, function (req, res, next) 
 
 //share resume
 router.post('/resume/share', tokenAuth.requireToken, function (req, res, next) {
-    var link = "/resume/" + req.body.rid;
+    var link = req.headers.host + "/resume/" + req.body.rid;
     Resume.update({rid: req.body.rid}, {$set: {
         link: link,
         subject: req.body.subject,
@@ -303,6 +303,7 @@ router.post('/resume/share', tokenAuth.requireToken, function (req, res, next) {
     }}, function (err) {
         if (err) throw err;
         Resume.findOne({rid: req.body.rid}, function (err, resume) {
+            resume._id = undefined;
             elasticSearchClient.create({
                 index: 'reshare',
                 type: 'resume',

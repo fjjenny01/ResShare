@@ -1,31 +1,48 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 mongoose.connect("mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare");
+var elasticsearch = require('elasticsearch');
+var client = new elasticsearch.Client({
+    host: '52.90.198.176:9200',
+    log: 'trace'
+});
+
+
+//var User = require('./model/dbModel').user;
+var Resume = require('./model/dbModel').resume;
+Resume.findOne({username: 'chazc'}, function (err, resume) {
+    resume._id = undefined;
+    client.create({
+        index: 'reshare',
+        type: 'resume',
+        body: resume
+    }, function (error, response) {
+    });
+});
+
+
 //
-////var User = require('./model/dbModel').user;
-//var Resume = require('./model/dbModel').resume;
 //
+//db.collection("articles").insert(
+//    [
+//        { _id: 1, subject: "coffee", author: "xyz", views: 50 },
+//        { _id: 2, subject: "Coffee Shopping", author: "efg", views: 5 },
+//        { _id: 3, subject: "Baking a cake", author: "abc", views: 90  },
+//        { _id: 4, subject: "baking", author: "xyz", views: 100 },
+//        { _id: 5, subject: "Café Con Leche", author: "abc", views: 200 },
+//        { _id: 6, subject: "Сырники", author: "jkl", views: 80 },
+//        { _id: 7, subject: "coffee and cream", author: "efg", views: 10 },
+//        { _id: 8, subject: "Cafe con Leche", author: "xyz", views: 10 }
+//    ]
+//)
 //
-////db.collection("articles").insert(
-////    [
-////        { _id: 1, subject: "coffee", author: "xyz", views: 50 },
-////        { _id: 2, subject: "Coffee Shopping", author: "efg", views: 5 },
-////        { _id: 3, subject: "Baking a cake", author: "abc", views: 90  },
-////        { _id: 4, subject: "baking", author: "xyz", views: 100 },
-////        { _id: 5, subject: "Café Con Leche", author: "abc", views: 200 },
-////        { _id: 6, subject: "Сырники", author: "jkl", views: 80 },
-////        { _id: 7, subject: "coffee and cream", author: "efg", views: 10 },
-////        { _id: 8, subject: "Cafe con Leche", author: "xyz", views: 10 }
-////    ]
-////)
-////
-var db = mongoose.model("article", new Schema({
-    _id: Number,
-    subject: String,
-    author: String,
-    views: Number,
-    tag: [String]
-}).index({tag: "text", subject: "text"}));
+//var db = mongoose.model("article", new Schema({
+//    _id: Number,
+//    subject: String,
+//    author: String,
+//    views: Number,
+//    tag: [String]
+//}).index({tag: "text", subject: "text"}));
 //
 //
 ////var o1 = new db({_id: 1, subject: "coffee", author: "xyz", views: 50, tag: ["engineer", "market"]});
@@ -46,10 +63,10 @@ var db = mongoose.model("article", new Schema({
 ////o7.save();
 ////o8.save();
 //
-db.find({$text: {$search: "coff"}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})
-    .exec(function(err, results) {
-        console.log(results);
-    });
+//db.find({$text: {$search: "coffe"}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})
+//    .exec(function(err, results) {
+//        console.log(results);
+//    });
 
 
 //var o1 = new User({
@@ -113,6 +130,12 @@ db.find({$text: {$search: "coff"}}, {score: {$meta: "textScore"}}).sort({score: 
 //
 //var b = 60 * 60 * 24;
 //console.log(b);
+
+
+
+
+
+
 
 
 

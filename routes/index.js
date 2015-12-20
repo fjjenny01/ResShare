@@ -92,18 +92,19 @@ router.get('/', function(req, res, next) {
 router.post('/register', function(req, res, next) {
     emailExistence.check(req.body.email, function(err, truth){
         if (truth) {
-            if (req.body.password != req.body.confirm_password) {
-                res.send("password doesn't match, please try again");
-                return;
-            }
             var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
             var uid = uuid.v1();
             var record = new User({
                 username: req.body.username,
+                firstname: '',
+                lastname: '',
                 uid: uid,
                 email: req.body.email,
                 password: hash,
-                status: 0
+                status: 0,
+                company: '',
+                interested_field: [],
+                avatar: {url: "https://s3.amazonaws.com/reshare%2Favatar/default-profile.png", aid: uuid.v1()}
             });
             var token = uuid.v1();
             redisClient.set(token, uid);

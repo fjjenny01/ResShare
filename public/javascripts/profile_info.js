@@ -20,7 +20,7 @@ $.ajax({
     url: "/user/profile/"+glb_uid+"/data",
     type: "GET",
     async: false,
-    headers: {"access_token": localStorage.getItem("ResToken")},
+    data: {"access_token": localStorage.getItem("ResToken")},
     dataType: "json",
     success: function (data) {
         //alert(data);
@@ -32,17 +32,17 @@ $.ajax({
         //loadEvents(res_list);
     }
 });
-document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info";
-document.getElementById("link-admin").href = "/user/profile/admin";
-document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic";
-document.getElementById("link-notification").href = "/user/profile/notification";
-document.getElementById("link-resume").href = "/user/resume";
+
+document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
 function search(){
     var input = document.getElementById("searchInput").value.split(" ").join("+");
     $.ajax({
         url: "/user/search/?kw="+input,
         type: "POST",
-        headers: {"access_token": localStorage.getItem("ResToken")},
         dataType: "json",
         success: function (data) {
             res_list = data;
@@ -265,8 +265,7 @@ function editProfile(){
     $.ajax({
         url: "/user/profile/info/edit",
         type: "POST",
-        headers: {"access_token": localStorage.getItem("ResToken")},
-        data: {"user": JSON.stringify(user_data)},
+        data: {"access_token": localStorage.getItem("ResToken"), "user": JSON.stringify(user_data)},
         dataType: "json",
         success: function (data) {
             alert(data);

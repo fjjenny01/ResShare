@@ -13,21 +13,36 @@ var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Int
 //user_data = {"username":"chaozc", "first name":"Zichen", "lastname":"Chao", "email":"zichen.chao@columbia.edu", "status":1, "company":"Columbia University", "interested_field":["Software Development", "IEOR", "Consulting", "Education"], "avatar":{"url":"../public/images/default_profile.jpg", "aid":""}};
 res_list = [{"username":"jingxiao", "link":"www.google.com", "subject":"HelloHello", "content":"Hi, would you please check my resume?? ...........................................Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??","tag":int_fields}]
 var prof_fields = ["email", "company"];
-var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
+//var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
+
+//localStorage.setItem("ResToken", "qwertyuiop");
+console.log(localStorage.getItem("ResToken"));
+
 $.ajax({
-url: "/user/data",
-type: "GET",
-dataType: "json",
-success: function (data) {
-    //alert(data);
-    user_data = data["user"];
-	console.log(user_data);
-    res_list = data["resume"];
-	console.log(res_list);
-	loadProfile(user_data);
-	loadEvents(res_list);
-}
+	url: "/user/data",
+	type: "GET",
+	async: false,
+	data: {"access_token": localStorage.getItem("ResToken")},
+	dataType: "json",
+	success: function (data) {
+    	//alert(data);
+    	user_data = data["user"];
+		console.log(user_data);
+    	res_list = data["resume"];
+		console.log(res_list);
+		loadProfile(user_data);
+		loadEvents(res_list);
+	}
 });
+//
+//$.get ("/user/data", { json: JSON.stringify({"access_token": localStorage.getItem("ResToken")}) }, function (data){
+//	user_data = data["user"];
+//		console.log(user_data);
+//    	res_list = data["resume"];
+//		console.log(res_list);
+//		loadProfile(user_data);
+//		loadEvents(res_list);
+//});
 
 function search(){
 	var input = document.getElementById("searchInput").value.split(" ").join("+");
@@ -53,8 +68,12 @@ function loadEvents(res_list){
 		imgd.className = "col-lg-2";
 		cttd.className = "col-lg-10";
 		var img = document.createElement("img");
-		img.className = "img-responsive img-circle";
+		img.className = "img-hover img-responsive img-circle";
 		img.src = res_list[i]["avatar"]["url"];
+		var aimg = document.createElement("a");
+		console.log(res_list[i].uid);
+		aimg.href = "/user/profile/"+res_list[i].uid+"/info?access_token="+localStorage.getItem("ResToken");
+		aimg.appendChild(img);
 		var fstLine = document.createElement("div");
 		var usr = document.createElement("h5");
 		usr.innerText = res_list[i]["username"];
@@ -74,7 +93,7 @@ function loadEvents(res_list){
 		content.innerText = res_list[i]["content"];
 		var dvd = document.createElement("div");
 		dvd.className = "divider";
-		imgd.appendChild(img);
+		imgd.appendChild(aimg);
 		asub.appendChild(sub);
 		cttd.appendChild(asub);
 		cttd.appendChild(usr);
@@ -86,9 +105,21 @@ function loadEvents(res_list){
 	}
 
 }
+//function view_user(uid){
+//	console.log(uid);
+//	$.ajax({
+//		url: "/user/profile/"+uid+"/info",
+//		type: "GET",
+//		data: {"access_token": localStorage.getItem("ResToken")},
+//		dataType: "json",
+//		success: function (data) {
+//		}
+//	});
+//}
 function loadProfile(user_data){
 	var prof_tb = document.getElementById("prof_tb");
 	console.log(user_data);
+	document.getElementById("user_prof_link").href = "/user/profile/"+user_data.uid+"/info?access_token="+localStorage.getItem("ResToken");
 	document.getElementById("prof_img").src = user_data["avatar"]["url"];
 	document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
 	for (var i = 0; i < prof_fields.length; ++i){
@@ -214,38 +245,7 @@ function editProfile(){
 	document.getElementById("name").innerHTML = document.getElementById("set-name").value+'<img class="img-hover pull-right" src="../public/images/gear39.png" data-toggle="modal" data-target="#myModal" onclick="feedDataModal()">';
 	document.getElementById("loc").innerHTML = document.getElementById("set-loc").value;
 	document.getElementById("edu").innerHTML = document.getElementById("set-edu").value;
-	/*
-	var input = document.getElementById("upload");
-	var params = {Key: '123.pdf', Body: input.files[0]};
-    bucket.upload(params, function (err, data) {
-      console.log(err);
-      console.log(data);
-    });
-*/
 
-	//document.getElementById("show").innerHTML = document.getElementById("upload").value;
-/*
-var input = document.getElementById("upload");
-var fReader = new FileReader();
-fReader.readAsDataURL(input.files[0]);
-fReader.onloadend = function(event){
-$.post( "test.php", { file:event.target.result } );
-}
-window.open("data:text/json;charset=utf-8," + escape(event.target.result));
-
-document.getElementById("show").innerHTML = event.target.result;
-}*/
 
 }
 
-/*
-$(function()
-    {
-        $('#upload').on('change',function ()
-        {
-            var filePath = $(this).val();
-            console.log(filePath);
-        });
-    });
-*/
-/*test*/

@@ -4,6 +4,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var redis = require('redis');
+var elasticsearch = require('elasticsearch');
+
 
 //connect to DB
 var dbUrl = 'mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare';
@@ -20,6 +22,19 @@ client.auth(password);
 client.on('connect', function() {
     console.log('connected to redis');
 });
+
+
+//connect to elasticsearch
+var elsClient = new elasticsearch.Client({
+    host: '52.90.198.176:9200',
+    log: 'trace'
+});
+
+
+
+
+
+module.exports.elsClient = elsClient;
 
 module.exports.user = mongoose.model('user', new Schema({
     username: String,
@@ -42,11 +57,17 @@ module.exports.resume = mongoose.model('resume', new Schema({
     rid: String,
     resumename: String,
     url: String,
+    link: String,
     subject: String,
     content: String,
     tag: [String],
     status: Number,
-    comments: [{uid: String, comment: String}]
+    comments: [{
+        reviewer_id: String,
+        reviewer_name: String,
+        reviewer_avatar: String,
+        comment: String
+    }]
 }).index({username: "text", subject: "text", tag: "text"}));
 
 module.exports.redisClient = client;

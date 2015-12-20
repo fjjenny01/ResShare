@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<!-- saved from url=(0031)https://bootswatch.com/journal/ -->
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>ResShare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../../stylesheets/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="../../../stylesheets/custom_c.min.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
+    <script src="../bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" async="" src="https://ssl.google-analytics.com/ga.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="../../../javascripts/bootstrap.min.js"></script>
+    <script src="../../../javascripts/custom.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.21.min.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="../" class="navbar-brand">ResShare</a>
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="">Resumes</a>
+                </li>
+                <li>
+                    <a href="">Function 2</a>
+                </li>
+                <li>
+                    <div class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input id="searchInput" type="text" class="form-control" placeholder="Search Resume">
+                        </div>
+                        <button type="submit" class="btn btn-default" onclick="search()">Search</button>
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="">XX's HomePage</a>
+                </li>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">Mailbox <span
+                                class="badge">3</span></a>
+                    <ul class="dropdown-menu" aria-labelledby="download">
+                        <li><a href=""> System <span class="badge">2</span></a></li>
+                        <li class="divider"></li>
+                        <li><a href=""> Request <span class="badge">1</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="bs-docs-section">
+        <div class="row">
+            <div class="col-lg-4">
+
+                <div class="affix leftbound">
+                    <div class="row">
+                        <div class="col-lg-4"><img id="prof_img" class="img-responsive img-circle"></div>
+                        <div class="col-lg-8"><h3 id="name"></h3></div>
+                    </div>
+
+
+
+                    <h6 class="divider"></h6>
+
+                    <!--
+                        <div class="row">
+                            <div class="col-lg-1">
+                                <img src="../public/images/mail4.png">
+                            </div>
+                            <div class="col-lg-10">
+                                <p id="email"> abc@example.com</p>
+                            </div>
+                        </div>
+                        <h5 id="loc"><img src="../public/images/pin56.png"> New York, NY</h4>
+                        <h5 id="edu"><img src="../public/images/graduation-cap2.png"> Columbia University</h4>
+                        <div id="show"></div>
+                    -->
+
+                    <div class="list-group table-of-contents">
+                        <a class="list-group-item" id="link-info">Profile</a>
+                        <a class="list-group-item" id="link-admin">Account Setting</a>
+                        <a class="list-group-item" id="link-topics">My Events</a>
+                        <a class="list-group-item" id="link-notification">Notifications</a>
+                        <a class="list-group-item" id="link-resume">My Resume</a>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-8" id="main-panel">
+
+                <h2>My Topics</h2>
+                <div class="divider"></div>
+                <div id="topic-panel"></div>
+
+
+
+
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+    <div id="get-uid"> <%= uid %> </div>
+</div>
+
+<script src="../../../javascripts/profile_topic.js"></script>
+
+</body>
+</html>

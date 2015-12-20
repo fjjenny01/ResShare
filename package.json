@@ -19,6 +19,7 @@
     "email-existence": "latest",
     "aws-sdk": "latest",
     "redis": "latest",
-    "node-uuid": "latest"
+    "node-uuid": "latest",
+    "elasticsearch": "latest"
   }
 }

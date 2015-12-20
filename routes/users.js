@@ -142,13 +142,19 @@ router.get('/resume/data', tokenAuth.requireToken, function (req, res, next) {
 
 //upload a resume
 router.post('/resume/upload', tokenAuth.requireToken, function(req, res, next) {
+    //console.log(req.body);
+    console.log(req.body.rid);
+    console.log(req.body.url);
+    console.log(req.body.tag);
+    console.log(req.body.resumename);
     var record = new Resume({
         uid: req.user.uid,
         username: req.user.username,
         avatar: req.user.avatar,
         rid: req.body.rid,
+        resumename:req.body.resumename,
         url: req.body.url,
-        tag: req.body.tag,
+        tag: JSON.parse(req.body.tag),
         status: 0
     });
     record.save();
@@ -160,11 +166,18 @@ router.get('/resume/aws/data', tokenAuth.requireToken, function (req, res, next)
 
 //delete a resume
 router.post('/resume/delete', tokenAuth.requireToken, function (req, res, next) {
-    Resume.remove({rid: req.body.rid});
+    console.log(req.body.rid);
+    Resume.remove({rid: req.body.rid}, function (err, data) {
+        if (err) throw err;
+        else {
+            console.log("asda");
+        }
+    });
 });
 
 //share resume
 router.post('/resume/share', tokenAuth.requireToken, function (req, res, next) {
+    console.log(link);
     var link = "/resume/" + req.body.rid;
     Resume.update({rid: req.body.rid}, {$set: {
         link: link,

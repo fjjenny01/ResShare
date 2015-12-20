@@ -1,8 +1,70 @@
-var hasChosen = false;
-var hasSelected = false;
+var hasChosen = false;  //if user has chosen the file to upload
+var hasSelected = false;  //if user has selected one of the resume in the list
 var tags = [];
+var resumelist=  [];
+var selected = -1;
+
+$( document ).ready(function() {
+
+  //load resume list
+  localStorage.setItem("ResToken", "qwertyuiop");
+  $.ajax({
+    url: "/user/resume/data",
+    type: "GET",
+    data: {"access_token": localStorage.getItem("ResToken")},
+    dataType: "json",
+    success: function (data) {
+      //alert(data.length);
+      //alert(data.toString())
+      console.log(data);
+      //console.log(data[0]["resumename"]);
+      for (var i=0;i<data.length;i++){
+        resumelist.push(data[i]["resumename"]);
+        resumelist.push(data[i]["rid"]);
+        resumelist.push(data[i]["url"]);
+        resumelist.push(data[i]["status"]);
+      }
+
+      //console.log(resumelist.length);
+
+      initializeResumeList();
+    }
+  });
+
+
+});
+
+
+function initializeResumeList(){
+
+  //update the UI
+  var table = document.getElementById("myresumelistbody");
+  while(table.rows.length > 0) {
+    table.deleteRow(0);
+  }
+  console.log("resumelist");
+  //console.log(resumelist.length);
+  for (var i=0;i<resumelist.length;i++){
+    if (i%4==0){
+      var real_i = i/4;
+      var row = table.insertRow(-1);
+      row.onclick = selectResume();
+      row.setAttribute('id',real_i+1+"");
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+
+      cell1.innerHTML = real_i + 1 + "";
+      cell2.innerHTML = resumelist[i];
+
+    }
+
+
+  }
+
+}
+
 function addResume(){
-  alert("on change");
+  //alert("on change");
   var input = document.getElementById("add_btn");
   if (input.files[0].name!=null){
 
@@ -21,109 +83,207 @@ function addResume(){
         secretAccessKey: '2DBik8r7RTvYnlRKZ7oCy53uV9iUaHSLYMAPSmeU'
       });
       AWS.config.region = 'us-east-1';
-      var bucket = new AWS.S3({params: {Bucket: 'czcbucket'}});
+      var bucket = new AWS.S3({params: {Bucket: 'czcbucket', ACL: 'public-read'}});
 
 
-      console.log(bucket);
+      //console.log(bucket);
       //upload to AWS S3
       var input = document.getElementById("add_btn");
       var uuid = generateUUID();
-      console.log("uuid:");
-      console.log(uuid);
+      //console.log("uuid:");
+      //console.log(uuid);
       var key = uuid+".pdf";
       var fileName = input.files[0].name;
+      var url = "";
       var params = {Key: key, Body: input.files[0]};
+
       bucket.upload(params, function (err, data) {
-        console.log(err);
-        console.log(data);
+        //console.log(data);
+        //url = data.Location;
+        url = "https://s3.amazonaws.com/czcbucket/"+uuid+".pdf";
+        //console.log(url);
+        console.log(tags);
+
+        $.ajax({
+          url: "/user/resume/upload",
+          type: "POST",
+          data: {"access_token": localStorage.getItem("ResToken"), "rid":uuid,"resumename":fileName, "url": url,"tag":JSON.stringify(tags)},
+          dataType: "json",
+          success: function (data) {
+
+          }
+        });
+
+        tags = [];
+        uncheckTags();
+        //console.log("BBBBBBBBBB");
+        resumelist.push(fileName);
+        resumelist.push(uuid);
+        resumelist.push(url);
+
+        initializeResumeList();
+
       });
 
-
-      //update the UI
-      var table = document.getElementById("myresumelistbody");
-
-      var row = table.insertRow(0);
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-
-      cell1.innerHTML = "1";
-      cell2.innerHTML = fileName;
-
-
-      for (var i = 0, row; row = table.rows[i]; i++) {
-        row.cells[0].innerHTML = i + 1 + "";
-      }
-
-      alert(table.length)
     }
 
     else {
       alert("please choose a resume to upload");
     }
 
-
   }
 
 
-//function disable() {
-//  alert("dddd");
-//  return false;
-//}
 
-//document.getElementById("organigram-iFrame").onmousedown = disable();
 
-  function deleteResume(id) {
-    if (hasSelected) {
-      alert("delete resume to do!");
+  function deleteResume() {
+    if (hasSelected && selected>-1) {
+
+      var rid  =  resumelist[selected * 4 +1];
+      var status = resumelist[selected * 4 +3];
+
+      $.ajax({
+        url: "/user/resume/delete",
+        type: "POST",
+        data: {"access_token": localStorage.getItem("ResToken"), "rid":rid, "status":status},
+        dataType: "json",
+        success: function (data) {
+
+        }
+      });
+
+      //update the UI
+      //console.log("selected");
+      //console.log(selected);
+      //console.log(resumelist);
+      resumelist.splice(selected*4,4);
+      //console.log(resumelist.length);
+
+      initializeResumeList();
+
+      var preview = document.getElementById("organigram-iFrame");
+
+      var url = resumelist[selected*4+2];
+      //console.log("url");
+      //console.log(url);
+      var src = "http://docs.google.com/gview?url=https://s3.amazonaws.com/resumefiles/resume_JINFANG.pdf&embedded=true";
+      //console.log(src);
+      preview.setAttribute('src',src);
+
     }
 
     else {
       alert("Please select a resume to delete");
     }
 
-    //var updateBtn = document.getElementById("delete_resume");
-
-
   }
 
   function selectResume() {
-    //alert(id + "");
-    //this.class = selectedRow;
 
 
-    alert("call select")
-    var updateBtn = document.getElementById("delete_resume");
-    var deleteBtn = document.getElementById("update_resume");
-    if (!deleteBtn.isDisabled) {
-      alert("!dis");
-      deleteBtn.disabled = false;
-    }
-    if (!updateBtn.isDisabled) {
-      alert("!dis");
-      updateBtn.disabled = false;
-    }
+      /* Get all rows from your 'table' but not the first one
+       * that includes headers. */
+      var rows = $('tr');
+
+      /* Create 'click' event handler for rows */
+      rows.on('click', function(e) {
+
+        /* Get current row */
+        var row = $(this);
+
+        /* Check if 'Ctrl', 'cmd' or 'Shift' keyboard key was pressed
+         * 'Ctrl' => is represented by 'e.ctrlKey' or 'e.metaKey'
+         * 'Shift' => is represented by 'e.shiftKey' */
+        if ((e.ctrlKey || e.metaKey) || e.shiftKey) {
+          /* If pressed highlight the other row that was clicked */
+          row.addClass('highlight');
+        } else {
+          /* Otherwise just highlight one row and clean others */
+          rows.removeClass('highlight');
+          row.addClass('highlight');
+        }
+
+
+        console.log(row["context"]);
+        var row_id = row["context"].getAttributeNode("id").value;
+        console.log('row_id');
+        console.log(row_id);
+
+        selected =row_id-1;
+        hasSelected=true;
+        //update the preview
+        var preview = document.getElementById("organigram-iFrame");
+
+        var url = resumelist[selected*4+2];
+        //console.log("url");
+        //console.log(url);
+        var src = "http://docs.google.com/gview?"+"url="+ url+ "&embedded=true";
+        //console.log(src);
+        preview.setAttribute('src',src);
+
+
+      });
+
+      /* This 'event' is used just to avoid that the table text
+       * gets selected (just for styling).
+       * For example, when pressing 'Shift' keyboard key and clicking
+       * (without this 'event') the text of the 'table' will be selected.
+       * You can remove it if you want, I just tested this in
+       * Chrome v30.0.1599.69 */
+      $(document).bind('selectstart dragstart', function(e) {
+        e.preventDefault(); return false;
+      });
+
+
   }
 
   function shareResume() {
-    $('#share_resume_modal').modal('show');
-    //alert("share");
+    if (hasSelected && selected > -1){
+
+
+      $('#share_resume_modal').modal('show');
+
+      var fileName = document.getElementById("fileName");
+      fileName.innerHTML = resumelist[selected*4];
+
+    }
+
 
   }
 
-  $('#myresumelist').on('click', 'tbody tr', function () {
-    alert("select resume");
-    $(this).addClass('highlight').siblings().removeClass('highlight');
-  });
+function commitShare(){
+
+  var fileName = document.getElementById("fileName");
+  var rid = resumelist[selected *4 + 1];
+  fileName.innerHTML = resumelist[selected*4];
+  console.log(fileName.innerHTML);
+  var subjectText = document.getElementById("subject").value;
+  console.log(subjectText);
+  var contentText = document.getElementById("content").value;
+
+  console.log(contentText);
+  if (subjectText!="" && contentText!=""){
+
+    $.ajax({
+      url: "/user/resume/share",
+      type: "POST",
+      data: {"access_token": localStorage.getItem("ResToken"), "rid":rid,"subject":subjectText, "content": contentText},
+      dataType: "json",
+      success: function (data) {
+
+      }
+    });
+
+    $('#share_resume_modal').modal('hide');
+    fileName.innerHTML = "";
+    document.getElementById("subject").value = "";
+    document.getElementById("content").value = "";
 
 
-  $(".table-striped > tbody >tr").click(function () {
-    alert("call");
-    var selected = $(this).hasClass("highlight");
-    $("tr").removeClass("highlight");
-    if (!selected)
-      $(this).addClass("highlight");
 
-  });
+  }
+
+}
 
 
   function generateUUID() {
@@ -137,22 +297,32 @@ function addResume(){
       d = Math.floor(d / 16);
       return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
-    alert(uuid);
     return uuid;
   }
 
 
 
 function saveTags(){
-  var str="";
   $('#tag_checkbox input:checkbox').each(function () {
     var sThisVal = (this.checked ? $(this).next('label').text() : "");
-    str+=sThisVal;
-    tags.push(sThisVal);
+    if (sThisVal!=""){
+      tags.push(sThisVal);
+    }
+
   });
 
   alert(tags.toString());
   $('#add_resume_modal').modal('hide');
+}
+
+function uncheckTags(){
+  $('#tag_checkbox input:checkbox').each(function () {
+    if (this.checked){
+      this.checked = false;
+    }
+
+  });
+
 }
 
 
@@ -190,30 +360,7 @@ function displayReply()
   $('textarea.noscroll').focus().val('').val(data);
 
 
-  //var ta = document.querySelector('textarea');
-
-  //autosize(textarea);
-  //var evt = document.createEvent('Event');
-  //evt.initEvent('autosize:update', true, false);
-  //ta.dispatchEvent(evt);
-
-
-  //autosize($('textarea'));
-  //$('textarea.comment').autogrow();
 
 }
 
 
-
-
-
-$( document ).ready(function() {
-
-  // auto adjust the height of
-  $('textarea.noscroll').delegate( 'textarea', 'keyup', function (){
-    $(this).height( 0 );
-    $(this).height( this.scrollHeight );
-  });
-  $('textarea.noscroll').find( 'textarea' ).keyup();
-
-});

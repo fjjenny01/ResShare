@@ -40,6 +40,7 @@ module.exports.resume = mongoose.model('resume', new Schema({
     username: String,
     avatar: {url: String, aid: String},
     rid: String,
+    resumename: String,
     url: String,
     subject: String,
     content: String,

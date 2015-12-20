@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/custom_c.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="/javascripts/resume.js" ></script>
+
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
+    <!--<script src="../public/javascripts/comment/inlineDisqussions.js"></script>-->
+    <!--<script src="../public/javascripts/happyhappy.js"></script>-->
+
+    <!--comment plugins starts here!!!!-->
+    <!-- Styles -->
+    <!--<link rel="stylesheet" type="text/css" href="../public/stylesheets/jquery-comments.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="../public/stylesheets/font-awesome.min.css">-->
+
+    <!-- Data -->
+    <!--<script type="text/javascript" src="../public/javascripts/comments-data.js"></script>-->
+
+    <!-- Libraries -->
+    <!--<script type="text/javascript" src="../public/javascripts/jquery-comments.js"></script>-->
+
+    <!--<script type="text/javascript">-->
+        <!--$(function() {-->
+            <!--$('#comments-container').comments({-->
+                <!--profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',-->
+                <!--roundProfilePictures: true,-->
+                <!--textareaRows: 1,-->
+                <!--getComments: function(success, error) {-->
+                    <!--setTimeout(function() {-->
+                        <!--success(commentsArray);-->
+                    <!--}, 500);-->
+                <!--},-->
+                <!--putComment: function(data, success, error) {-->
+                    <!--setTimeout(function() {-->
+                        <!--success(data);-->
+                    <!--}, 200)-->
+                <!--},-->
+                <!--deleteComment: function(data, success, error) {-->
+                    <!--setTimeout(function() {-->
+                        <!--success();-->
+                    <!--}, 200)-->
+                <!--},-->
+                <!--upvoteComment: function(data, success, error) {-->
+                    <!--setTimeout(function() {-->
+                        <!--success(data);-->
+                    <!--}, 200)-->
+                <!--}-->
+            <!--});-->
+        <!--});-->
+    <!--</script>-->
+
+
+    <!--<script>-->
+        <!--disqus_shortname = 'jingxiao';-->
+        <!--jQuery(document).ready(function() {-->
+            <!--jQuery("p").inlineDisqussions();-->
+        <!--});-->
+    <!--</script>-->
+
+    <!--another comment plugin starts here-->
+    <link rel="stylesheet" href="/stylesheets/comment/side-comments.css" />
+    <link rel="stylesheet" href="/stylesheets/comment/default-theme.css" />
+    <link rel="stylesheet" href="/stylesheets/comment/basics.css" />
+
+
+    <!--<link rel="stylesheet" type="text/css" href="../public/stylesheets/comment/inlineDisqussions.css" />-->
+
+
+    <!--<script src="support/js/jquery.js"></script>-->
+    <script src="/javascripts/comment/side-comments.js"></script>
+    <script src="/javascripts/comment/test_data.js"></script>
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="../" class="navbar-brand">ResShare</a>
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="">Resumes</a>
+                </li>
+                <li>
+                    <a href="">Function 2</a>
+                </li>
+                <li>
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search Resume">
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="">XX's HomePage</a>
+                </li>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">Mailbox <span class="badge">3</span></a>
+                    <ul class="dropdown-menu" aria-labelledby="download">
+                        <li><a href=""> System <span class="badge">2</span></a></li>
+                        <li class="divider"></li>
+                        <li><a href=""> Request <span class="badge">1</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="bs-docs-section">
+
+        <div class="col-xs-7">
+
+            <iframe id="organigram-iFrame" src="http://docs.google.com/gview?url=https://s3.amazonaws.com/czcbucket/078f3b07-ac66-49b2-add7-2dcf767d8388.pdf&embedded=true" onmousedown="return false;" onselectstart="return false;"
+                    style="width:700px; height:800px;" frameborder="0"></iframe>
+
+
+        </div>
+
+        <div id="commentable-container" class="container commentable-container">
+            <h1 class="title">
+            </h1>
+            <p data-section-id="1" class="commentable-section">
+            </p>
+
+        </div>
+
+
+        <!--<table class="table table-responsive table-hover " id="commentList">-->
+
+            <!--<tbody class="active" id="commentListBody">-->
+            <!--<tr id="comment">-->
+                <!--<td>-->
+                    <!--<img src="/images/default_profile.jpg" class="img-circle" alt="Cinque Terre" width="30" height="25">-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<label>User Name</label><label>It looks pretty good to me. Though you can describe more about what you did-->
+                    <!--instead of what the team did in your group projects. Hope that helps!</label>-->
+                    <!--<a href="#" id="reply" class="btn btn-link" onclick="displayResult()">Reply</a>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<img src="/images/default_profile.jpg" class="img-circle" alt="Cinque Terre" width="30" height="25">-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<label>User Name</label><label>It looks pretty good to me. Though you can describe more about what you did-->
+                    <!--instead of what the team did in your group projects. Hope that helps!</label>-->
+                    <!--<a href="#" class="btn btn-link" onclick="return false">Reply</a>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+
+        <!--<div class="col-xs-5">-->
+            <!--<div id="comments-container"></div>-->
+        <!--</div>-->
+
+
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        var SideComments = require('side-comments');
+        window.sideComments = new SideComments('#commentable-container', currentUser, existingComments);
+        window.sideComments.on('commentPosted', function( comment ) {
+            comment.id = parseInt(Math.random() * (100000 - 1) + 1);
+            sideComments.insertComment(comment);
+
+            console.log("insert comments!!!!!!!!!!!!!!!!!!!")
+            $.ajax({
+                url: '/resume/e9df4ce4-5f92-46ac-88cc-24f20c7df74e/comment',
+                type: 'POST',
+                data: {"access_token": localStorage.getItem("ResToken"), "comment": comment},
+                //data: comment,
+                success: function( savedComment ) {
+                  // Once the comment is saved, you can insert the comment into the comment stream with "insertComment(comment)".
+                  sideComments.insertComment(comment);
+                }
+            });
+        });
+
+
+
+        window.sideComments.on('commentDeleted', function( comment ) {
+            sideComments.removeComment(comment.sectionId, comment.id);
+        });
+    });
+</script>
+
+
+</body>
+</html>

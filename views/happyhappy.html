@@ -10,83 +10,25 @@
     <script src="../public/javascripts/bootstrap.min.js"></script>
     <script src="../public/javascripts/happyhappy.js" ></script>
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="../public/javascripts/comment/inlineDisqussions.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../public/stylesheets/comment/inlineDisqussions.css" />
+
+
+    <script>
+        disqus_shortname = 'jingxiao';
+        jQuery(document).ready(function() {
+            jQuery("p").inlineDisqussions();
+        });
+    </script>
+
 </head>
 <body>
-<button onclick="addTag()">add tag</button>
-<!--<button onclick="check()">add tag</button>-->
-<div id ="add_resume_modal" class="modal" >
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">Tag Your Resume</h4>
-            </div>
-            <div class="modal-body" >
+<p data-disqus-identifier="disqussion-12">
+    Lorem ipsum...
 
-
-                <div class="modal-body">
-
-
-
-
-                    <ul class="checkbox" id="happy">
-                        <li><input type="checkbox"> <label>Software Development</label></li>
-
-                        <li><input type="checkbox"> <label>Marketing</label></li>
-                        <li><input type="checkbox"> <label>Accounting</label></li>
-
-                        <li><input type="checkbox"> <label>Human Resource</label></li>
-                        <li><input type="checkbox"> <label>Design</label></li>
-
-                        <li><input type="checkbox"> <label>Consulting</label></li>
-                    </ul>
-
-
-
-                </div>
-
-
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="check()">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="col-xs-9">
-    <div class="jumbotron">
-
-        <table class="table table-responsive table-hover " id="commentList">
-
-            <tbody class="active" id="commentListBody">
-            <tr id="comment">
-                <td>
-                    <img src="/images/default_profile.jpg" class="img-circle" alt="Cinque Terre" width="30" height="25">
-                </td>
-                <td>
-                    <label>User Name</label><label>It looks pretty good to me. Though you can describe more about what you did
-                    instead of what the team did in your group projects. Hope that helps!</label>
-                    <a href="#" id="reply" class="btn btn-link" onclick="displayResult()">Reply</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <img src="/images/default_profile.jpg" class="img-circle" alt="Cinque Terre" width="30" height="25">
-                </td>
-                <td>
-                    <label>User Name</label><label>It looks pretty good to me. Though you can describe more about what you did
-                    instead of what the team did in your group projects. Hope that helps!</label>
-                    <a href="#" class="btn btn-link" onclick="return false">Reply</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+</p>
 
 
 

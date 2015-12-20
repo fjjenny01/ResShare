@@ -51,3 +51,12 @@ function displayResult()
     $('textarea').focus().val('').val(data);
 
 }
+
+
+$( document ).ready(function() {
+
+    var label = document.getElementById("mynameisjin");
+    console.log(label.innerHTML);
+    label.value = "Helllllllllllo";
+
+});

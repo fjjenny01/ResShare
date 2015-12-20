@@ -193,7 +193,6 @@ router.get('/resume/:rid', tokenAuth.requireToken, function (req, res, next) {
 });
 
 
-<<<<<<< HEAD
 
 
 
@@ -235,7 +234,9 @@ router.post('/user/profile/resume/upload', function (req, res, next) {
 
 router.get('/user/profile/resume', function (req, res, nex) {
     res.render('myresume');
-=======
+});
+
+
 router.get('/resume/:rid/data', tokenAuth.requireToken, function (req, res, next) {
     Resume.find({rid: req.params.rid}, function (err, data) {
         res.send(data);
@@ -251,7 +252,6 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
     }, function (err, data) {
         if (err) throw err;
     });
->>>>>>> 719329b11ed022cf802873456f594c812cdd53ad
 });
 
 //delete a comment

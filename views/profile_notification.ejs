@@ -37,20 +37,8 @@
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
-                <li>
-                    <a href="">Resumes</a>
-                </li>
-                <li>
-                    <a href="">Function 2</a>
-                </li>
-                <li>
-                    <div class="navbar-form navbar-left" role="search">
-                        <div class="form-group">
-                            <input id="searchInput" type="text" class="form-control" placeholder="Search Resume">
-                        </div>
-                        <button type="submit" class="btn btn-default" onclick="search()">Search</button>
-                    </div>
-                </li>
+
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -58,11 +46,6 @@
                     <a id="name_page" href=""></a>
                 </li>
 
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">Mailbox <span
-                               id="badge" class="badge"></span></a>
-                    </ul>
-                </li>
             </ul>
 
         </div>
@@ -79,6 +62,7 @@
                         <div class="col-lg-4"><img id="prof_img" class="img-responsive img-circle"></div>
                         <div class="col-lg-8"><h3 id="name"></h3></div>
                     </div>
+
                     <h6 class="divider"></h6>
 
                     <!--
@@ -99,7 +83,8 @@
                         <a class="list-group-item" id="link-info">Profile</a>
                         <a class="list-group-item" id="link-admin">Account Setting</a>
                         <a class="list-group-item" id="link-topics">My Events</a>
-                        <a class="list-group-item" id="link-notification">Notifications</a>
+                        <a class="list-group-item" id="link-notification">Notifications <span
+                                    id="badge" class="badge"></span></a>
                         <a class="list-group-item" id="link-resume">My Resume</a>
                     </div>
 
@@ -111,6 +96,7 @@
             <div class="col-lg-8" id="main-panel">
 
                 <h2>My News</h2>
+                <div id="checkccc"></div>
                 <div id="createtable"></div>
                 <div id="createrow"></div>
             </div>
@@ -118,6 +104,7 @@
         </div>
     </div>
     <div id="get-uid"> <%= uid %> </div>
+
 </div>
 
 <script src="../../../javascripts/profile_notification.js"></script>

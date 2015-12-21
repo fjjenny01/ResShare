@@ -45,6 +45,7 @@ var createQueue = function (sqsCreateParams) {
 
 
 var sendMessageToQueue = function (sqsGetParams, sqsSendParams, reviewee_name, subject, link) {
+    console.log("11");
     sqs.getQueueUrl(sqsGetParams, function(err, data) {
         if (err) throw err;
         sqsSendParams.QueueUrl = data.QueueUrl;
@@ -54,6 +55,7 @@ var sendMessageToQueue = function (sqsGetParams, sqsSendParams, reviewee_name, s
             "subject_link": link
         };
         sqsSendParams.MessageBody = JSON.stringify(obj);
+        console.log(sqsSendParams);
         sqs.sendMessage(sqsSendParams, function (err, data) {
             if (err) throw err;
         });
@@ -269,8 +271,9 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         //notify author and reviewee
         sqsGetParams.QueueName = comment.author_id;
         console.log("author id: " + sqsGetParams.QueueName);
+        //var len = comment.link.length;
+        //comment.link = comment.link.substring(req.headers.host.length, len);
         sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
-        //console.log("comment parent" + comment.parent);
         if (comment.parent != null) {
             Resume.findOne({rid: req.params.rid}, function (err, resume) {
                 var commentArray = resume.comments;
@@ -278,19 +281,17 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
                     if (commentArray[i].id == comment.parent){
                         var parent_name = commentArray[i].fullname;
                         console.log("parent_name: " + parent_name);
+                        console.log("full name: " + comment.fullname);
                         sqsGetParams.QueueName = commentArray[i].current_user_id;
-                        var len = comment.link.length;
-                        comment.link = comment.link.substring(req.headers.host.length, len);
-                        console.log(comment.link);
-                        sendMessageToQueue(sqsGetParams, sqsSendParams, parent_name, comment.subject, comment.link);
-                        break;
+                        console.log(sqsGetParams.QueueName);
+                        sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
+                        return;
                     }
                 }
             });
         }
     });
 });
-
 
 
 router.put('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, next) {

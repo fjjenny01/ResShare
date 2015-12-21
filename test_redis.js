@@ -19,22 +19,22 @@ client.on('connect', function() {
 //});
 
 
-//client.keys('*', function (err, keys) {
-//    if (err) return console.log(err);
-//    for(var i = 0, len = keys.length; i < len; i++) {
-//        //client.del(keys[i], function(err, reply) {
-//        //    console.log(reply);
-//        //});
-//        console.log(keys[i]);
-//        client.get(keys[i], function(err, reply) {
-//            if (reply) {
-//                console.log(reply);
-//            }
-//        });
-//    }
-//});
-
-
-client.get("2d8d6260-a79e-11e5-8dae-c72952bab9be", function (err, reply) {
-    console.log(reply);
+client.keys('*', function (err, keys) {
+    if (err) return console.log(err);
+    for(var i = 0, len = keys.length; i < len; i++) {
+        //client.del(keys[i], function(err, reply) {
+        //    console.log(reply);
+        //});
+        console.log(keys[i]);
+        //client.get(keys[i], function(err, reply) {
+        //    if (reply) {
+        //        console.log(reply);
+        //    }
+        //});
+    }
 });
+//
+//
+//client.get("2d8d6260-a79e-11e5-8dae-c72952bab9be", function (err, reply) {
+//    console.log(reply);
+//});

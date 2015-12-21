@@ -143,11 +143,8 @@ function loadProfile(user_data){
     console.log(user_data);
     document.getElementById("prof_img").src = user_data["avatar"]["url"];
     document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
-    if(user_data["firstname"]&&user_data["lastname"]){
-        document.getElementById("name_page").innerHTML= user_data["firstname"]+" "+user_data["lastname"]+"'s HomePage"
-    }else{
-        document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
-    }
+    document.getElementById("name_page").innerHTML="My HomePage"
+
 
 }
 
@@ -224,3 +221,4 @@ function updatePw(){
 
 
 }
+

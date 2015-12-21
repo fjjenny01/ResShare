@@ -79,7 +79,14 @@ $( document ).ready(function() {
         }
     });
 
-
+    var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
+    document.getElementById("myhome_page_link").href = my_homepage_url
+    document.getElementById("name_page").href = my_homepage_url
+    if(user_data["firstname"]&&user_data["lastname"]){
+        document.getElementById("name_page").innerHTML= user_data["firstname"]+" "+user_data["lastname"]+"'s HomePage"
+    }else{
+        document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
+    }
 
 });
 

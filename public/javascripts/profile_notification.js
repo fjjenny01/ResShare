@@ -211,6 +211,8 @@ function getMessage(){
 }
 
 function checkedMessage(amessage){
+    var content = JSON.parse(result_data[amessage][0].Body)
+    var url = content.subject_link
     $.ajax({
         url:"/user/profile/"+glb_uid+"/notification/check",
         type: "POST",
@@ -223,7 +225,8 @@ function checkedMessage(amessage){
         error: function(){
             console.log("login error")}
     })
-    window.location.href=result_data[amessage][0].Body.link;
+    console.log(url)
+    window.location.href="www.google.com";
 
 
 }

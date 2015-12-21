@@ -51,7 +51,7 @@ var sendMessageToQueue = function (sqsGetParams, sqsSendParams, reviewee_name, s
         var obj = {
             "from": reviewee_name,
             "subject": subject,
-            "link": link
+            "subject_link": link
         };
         sqsSendParams.MessageBody = JSON.stringify(obj);
         sqs.sendMessage(sqsSendParams, function (err, data) {

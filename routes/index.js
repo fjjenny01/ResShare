@@ -268,6 +268,7 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         if (err) throw err;
         //notify author and reviewee
         sqsGetParams.QueueName = comment.author_id;
+        console.log("author id: " + sqsGetParams.QueueName);
         sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
         //console.log("comment parent" + comment.parent);
         if (comment.parent != null) {

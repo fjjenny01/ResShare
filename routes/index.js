@@ -238,7 +238,7 @@ router.get('/resume/:rid/data', tokenAuth.requireToken, function (req, res, next
 
 router.get('/resume/:rid/comment/data', tokenAuth.requireToken, function (req, res, next) {
     Resume.findOne({rid: req.params.rid}, function (err, resume) {
-        res.send(resume.comments);
+        res.send(resume[0].comments);
     });
 });
 

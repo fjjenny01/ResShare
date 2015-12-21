@@ -211,7 +211,7 @@ router.get('/profile/:uid/notification/data', tokenAuth.requireToken, function(r
         sqs.getQueueAttributes(params, function(err, data) {
             if (err) throw err;
             var num = data.Attributes.ApproximateNumberOfMessages;
-
+            check(message);
             for (var i = 0; i < num; i++) {
                 sqs.receiveMessage(sqsRecieveParams, function(err, data) {
                     message.push(data.Messages);

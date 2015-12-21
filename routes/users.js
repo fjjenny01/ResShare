@@ -152,6 +152,7 @@ router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, ne
             Resume.update({uid: req.user.uid}, {username: JSON.parse(req.body.user).username}, function (err, data) {
                 if (err) throw err;
                 Resume.findOne({uid: req.user.uid}, function (err, resume) {
+                    if (!resume)return;
                     elasticSearchClient.update({
                         index: 'reshare',
                         type: 'resume',

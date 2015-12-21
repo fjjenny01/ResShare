@@ -269,12 +269,17 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         //notify author and reviewee
         sqsGetParams.QueueName = comment.author_id;
         sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
-        console.log("comment parent" + comment.parent);
+        //console.log("comment parent" + comment.parent);
         if (comment.parent != null) {
-            User.findOne({uid: comment.parent}, function (err, parent) {
-                var parent_name = parent.username;
-                sqsGetParams.QueueName = comment.parent;
-                sendMessageToQueue(sqsGetParams, sqsSendParams, parent_name, comment.subject, comment.link);
+            Resume.findOne({rid: req.params.rid}, function (err, resume) {
+                var commentArray = resume.comments;
+                for (var i = 0; i < commentArray; i++) {
+                    if (commentArray[i].id == comment.parent){
+                        var parent_name = commentArray[i].fullname;
+                        sqsGetParams.QueueName = commentArray[i].current_user_id;
+                        sendMessageToQueue(sqsGetParams, sqsSendParams, parent_name, comment.subject, comment.link);
+                    }
+                }
             });
         }
     });

@@ -4,6 +4,7 @@ var bucket = new AWS.S3({params: {Bucket: 'czcbucket/avatars', ACL:'public-read'
 console.log(bucket);
 //bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
 glb_uid = document.getElementById("get-uid").innerText;
+remove("get-uid");
 console.log(glb_uid);
 //$('#get-uid').innerHTML = "";
 var img_dir = "images/"
@@ -32,12 +33,25 @@ $.ajax({
         //loadEvents(res_list);
     }
 });
+console.log(self);
 
 document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
+
+function remove(id) {
+    return (elem=document.getElementById(id)).parentNode.removeChild(elem);
+}
+
+if (self == false){
+    remove("link-admin");
+    remove("link-notification");
+    remove("link-resume");
+
+}
+
 //redirect to my home page link
 var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
 document.getElementById("myhome_page_link").href = my_homepage_url
@@ -114,93 +128,52 @@ $("#img_upload input:file").change(function (){
 function loadProfile(user_data){
     var prof_tb = document.getElementById("prof_tb");
     console.log(user_data);
-    if(user_data["firstname"]&&user_data["lastname"]){
-        document.getElementById("name_page").innerHTML= user_data["firstname"]+" "+user_data["lastname"]+"'s HomePage"
-    }else{
-        document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
-    }
+
+    document.getElementById("name_page").innerHTML= "My HomePage"
+
     document.getElementById("prof_img").src = user_data["avatar"]["url"];
     document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
     document.getElementById("email").placeholder = user_data["email"];
-    document.getElementById("set-username").value = user_data["username"];
-    document.getElementById("set-lastname").value = user_data["lastname"];
-    document.getElementById("set-firstname").value = user_data["firstname"];
-    document.getElementById("set-company").value = user_data["company"];
 
-    var int_d = document.getElementById("int-f-cb");
-    for (var i = 0; i < int_fields.length; ++i){
-        var cbd = document.createElement("div");
-        var cb = document.createElement("input");
-        cb.type = "checkBox";
-        cb.id = int_fields[i];
-        cbd.appendChild(cb);
-        cbd.innerHTML = cbd.innerHTML+" "+int_fields[i]
-        int_d.appendChild(cbd);
-        if (user_data["interested_field"].indexOf(int_fields[i]) >= 0){
-            document.getElementById(int_fields[i]).checked = true;
+    if (self == true){
+        remove("else");
+        document.getElementById("set-username").value = user_data["username"];
+        document.getElementById("set-lastname").value = user_data["lastname"];
+        document.getElementById("set-firstname").value = user_data["firstname"];
+        document.getElementById("set-company").value = user_data["company"];
+
+        var int_d = document.getElementById("int-f-cb");
+        for (var i = 0; i < int_fields.length; ++i){
+            var cbd = document.createElement("div");
+            var cb = document.createElement("input");
+            cb.type = "checkBox";
+            cb.id = int_fields[i];
+            cbd.appendChild(cb);
+            cbd.innerHTML = cbd.innerHTML+" "+int_fields[i]
+            int_d.appendChild(cbd);
+            if (user_data["interested_field"].indexOf(int_fields[i]) >= 0){
+                document.getElementById(int_fields[i]).checked = true;
+            }
+
         }
-
+    }
+    else{
+        remove("ifself");
+        document.getElementById("else-username").innerText = user_data["username"];
+        document.getElementById("else-lastname").innerText = user_data["lastname"];
+        document.getElementById("else-firstname").innerText = user_data["firstname"];
+        document.getElementById("else-company").innerText = user_data["company"];
+        document.getElementById("else-email").innerText = user_data["email"];
+        var iit = document.getElementById("else-int");
+        for (var j = 0; j < user_data.interested_field.length; j++){
+            var sp = document.createElement("span");
+            sp.className = "label label-info margin-tag pull-right";
+            sp.innerText = user_data.interested_field[j];
+            iit.appendChild(sp);
+        }
     }
 
-    //var cnt = 0;
-    //var div = null;
-    //for (var j = 0; j < user_data["interested_field"].length; ++j){
-    //    var sp = document.createElement("span");
-    //    sp.className = "label label-primary margin-tag";
-    //    sp.innerText = user_data["interested_field"][j];
-    //    cnt = cnt+1;
-    //    if (cnt%2 == 1){
-    //        div = document.createElement("div");
-    //        div.appendChild(sp);
-    //    }
-    //    else{
-    //        div.appendChild(sp);
-    //        int_d.appendChild(div);
-    //    }
-    //}
 
-
-    /*
-     for (var i = 0; i < prof_fields.length; ++i){
-     if (prof_fields[i] == "name"){
-     document.getElementById("name").innerHTML = user_data[map[prof_fields[i]]]+'<img class="img-hover pull-right" src="../public/images/gear39.png" data-toggle="modal" data-target="#myModal" onclick="feedDataModal()">';
-     }
-     else if (prof_fields[i] == "int_fields"){
-     var int_d = document.getElementById("int_fields");
-     var cnt = 0;
-     var div = null;
-     for (var j = 0; j < int_fields.length; ++j){
-     if (user_data[prof_fields[i]][int_fields[j]] == true)
-     var sp = document.createElement("span");
-     sp.className = "label label-primary margin-tag";
-     sp.innerText = int_fields[j];
-     cnt = cnt+1;
-     if (cnt%2 == 1){
-     div = document.createElement("div");
-     div.appendChild(sp);
-     }
-     else{
-     div.appendChild(sp);
-     int_d.appendChild(div);
-     }
-
-     }
-     }
-     else{
-     var tr = document.createElement("tr");
-     var td = document.createElement("td");
-     var img = document.createElement("img");
-     img.src = map_img[prof_fields[i]];
-     td.appendChild(img);
-     tr.appendChild(td);
-     td = document.createElement("td");
-     td.id = prof_fields[i];
-     td.innerHTML = user_data[map[prof_fields[i]]];
-     tr.appendChild(td);
-     prof_tb.appendChild(tr);
-     }
-     }
-     */
 }
 
 

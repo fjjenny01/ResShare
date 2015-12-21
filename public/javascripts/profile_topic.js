@@ -50,12 +50,27 @@ $.ajax({
         loadEvents(data);
     }
 });
+
+
 //console.log(m);
 document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
+
+//Check self
+function remove(id) {
+    return (elem=document.getElementById(id)).parentNode.removeChild(elem);
+}
+
+if (self == false){
+    remove("link-admin");
+    remove("link-notification");
+    remove("link-resume");
+
+}
+
 //redirect to my home page link
 var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
 document.getElementById("myhome_page_link").href = my_homepage_url

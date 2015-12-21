@@ -37,7 +37,9 @@ $( document ).ready(function() {
       loadProfile(user_data);
     }
   });
-
+  var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
+  document.getElementById("myhome_page_link").href = my_homepage_url
+  document.getElementById("name_page").href = my_homepage_url
 
 });
 
@@ -326,4 +328,9 @@ function loadProfile(user_data){
   prof_tb.src = user_data["avatar"]["url"];
   console.log(prof_tb.src);
 
+    document.getElementById("name_page").innerHTML="My HomePage"
+
+
 }
+
+

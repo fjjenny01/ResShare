@@ -27,59 +27,62 @@ var client = new elasticsearch.Client({
 //});
 
 
-client.create({
-    index: 'reshare',
-    type: 'resume',
-    body: {
-        "uid": "e7565310-a798-11e5-8246-195085142db7",
-        "username": "Jin Fang",
-        "rid": "cc955709-b5d8-40a7-aa7f-818ed61a050d",
-        "resumename": "resume_JINFANG.pdf",
-        "url": "https://s3.amazonaws.com/czcbucket/cc955709-b5d8-40a7-aa7f-818ed61a050d.pdf",
-        "link": "localhost:3000/resume/cc955709-b5d8-40a7-aa7f-818ed61a050d",
-        "subject": "Share my first Resume",
-        "content": "I want a software engineer positon!!!",
-        "status": 1,
-        "comments": [],
-        "tag": [
-            "Software Development"
-        ],
-        "avatar": {
-            "aid": "e7565311-a798-11e5-8246-195085142db7",
-            "url": "https://s3.amazonaws.com/czcbucket%2Favatars/1450671808362.jpeg"
-        },
-        "__v": 0
-    }
-}, function (error, response) {
-
-});
-
-
-
-
-
-
-//client.search({
+//client.create({
 //    index: 'reshare',
+//    type: 'resume',
+//    id: 'ca9b1dab-b6bc-409a-8f3e-baad24d2866c',
 //    body: {
-//        query: {
-//            multi_match: {
-//                query: "gineering",
-//                fields: ['subject', 'content', 'tag'],
-//                operator: 'or',
-//                fuzziness: 'AUTO'
-//            }
-//        }
+//        "uid": "300690b0-a696-11e5-8c5b-51ef6d5335f6",
+//        "username": "shawn",
+//        "rid": "ca9b1dab-b6bc-409a-8f3e-baad24d2866c",
+//        "resumename": "Resume(JingxiaoGu).pdf",
+//        "url": "https://s3.amazonaws.com/czcbucket/ca9b1dab-b6bc-409a-8f3e-baad24d2866c.pdf",
+//        "link": "localhost:3000/resume/ca9b1dab-b6bc-409a-8f3e-baad24d2866c",
+//        "subject": "Seeking for SDE intern",
+//        "content": "Hi, everyone, this is my resume. I am looking for an internship as a SDE next summer",
+//        "status": 1,
+//        "comments": [],
+//        "tag": [
+//            "Software Development",
+//            "Design",
+//            "Consulting"
+//        ],
+//        "avatar": {
+//            "url": "https://s3.amazonaws.com/czcbucket%2Favatars/1450701486495.jpeg",
+//            "aid": "3006b7c0-a696-11e5-8c5b-51ef6d5335f6"
+//        },
+//        "__v": 0
 //    }
 //}, function (error, response) {
-//    console.log("sadaaaaaaaaaaa");
-//    console.log(response.hits.hits);
+//
 //});
+
+
+
+
+
+
+client.search({
+    index: 'reshare',
+    body: {
+        query: {
+            multi_match: {
+                query: "jin Fang",
+                fields: ['subject', 'content', 'tag', 'username'],
+                operator: 'or',
+                fuzziness: 'AUTO'
+            }
+        }
+    }
+}, function (error, response) {
+    console.log("sadaaaaaaaaaaa");
+    console.log(response.hits.hits);
+});
 
 //client.delete({
 //    index: 'reshare',
 //    type: 'resume',
-//    id: 'AVG3lh777oMsqiO_6Pve'
+//    id: '66a5f850-ad48-4d67-beb6-eab44b94e7c1'
 //}, function (error, response) {
 //
 //});
@@ -87,10 +90,10 @@ client.create({
 //client.update({
 //    index: 'reshare',
 //    type: 'resume',
-//    id: "AVG3lrON7oMsqiO_6Pvf",
+//    id: "cc955709-b5d8-40a7-aa7f-818ed61a050d",
 //    body: {
 //        doc: {
-//            username: "shawn"
+//            username: "jin Fang"
 //        }
 //    }},function(err, res) {
 //});

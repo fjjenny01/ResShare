@@ -26,7 +26,6 @@ var sendMail = function(emailParams) {
     });
 };
 
-
 var sqsGetParams = {
     QueueName: ""
 };
@@ -71,7 +70,7 @@ router.post('/search', function(req, res, next) {
             query: {
                 multi_match: {
                     query: req.query.kw,
-                    fields: ['subject', 'content','tag'],
+                    fields: ['subject', 'content','tag', 'username'],
                     operator: 'or',
                     fuzziness: 'AUTO'
                 }
@@ -152,38 +151,42 @@ router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, ne
     User.update({uid: req.user.uid}, {$set: JSON.parse(req.body.user)}, function (err, data) {
         if (err) throw err;
         if (req.user.username != JSON.parse(req.body.user).username) {
-            Resume.update({uid: req.user.uid}, {username: JSON.parse(req.body.user).username}, function (err, data) {
+            Resume.update({uid: req.user.uid},{username: JSON.parse(req.body.user).username}, {multi: true}, function (err, data) {
                 if (err) throw err;
-                Resume.findOne({uid: req.user.uid}, function (err, resume) {
-                    if (!resume)return;
-                    elasticSearchClient.update({
-                        index: 'reshare',
-                        type: 'resume',
-                        id: resume.rid,
-                        body: {
-                            doc: {
-                                username: JSON.parse(req.body.user).username
-                            }
-                        }},function(err, res) {
-                    });
+                if (data.n == 0) return;
+                Resume.find({uid: req.user.uid}, function (err, resumeArray) {
+                    for (var i = 0; i < resumeArray.length; i++) {
+                        elasticSearchClient.update({
+                            index: 'reshare',
+                            type: 'resume',
+                            id: resumeArray[i].rid,
+                            body: {
+                                doc: {
+                                    username: JSON.parse(req.body.user).username
+                                }
+                            }},function(err, res) {
+                        });
+                    }
                 });
             });
         }
         if (req.user.avatar != JSON.parse(req.body.user).avatar) {
-            Resume.update({uid: req.user.uid}, {avatar: JSON.parse(req.body.user).avatar}, function (err, data) {
+            Resume.update({uid: req.user.uid}, {avatar: JSON.parse(req.body.user).avatar}, {multi: true}, function (err, data) {
                 if (err) throw err;
-                Resume.findOne({uid: req.user.uid}, function (err, resume) {
-                    if (!resume) return;
-                    elasticSearchClient.update({
-                        index: 'reshare',
-                        type: 'resume',
-                        id: resume.rid,
-                        body: {
-                            doc: {
-                                avatar: JSON.parse(req.body.user).avatar
-                            }
-                        }},function(err, res) {
-                    });
+                if (data.n == 0) return;
+                Resume.find({uid: req.user.uid}, function (err, resumeArray) {
+                    for (var i = 0; i < resumeArray.length; i++) {
+                        elasticSearchClient.update({
+                            index: 'reshare',
+                            type: 'resume',
+                            id: resumeArray[i].rid,
+                            body: {
+                                doc: {
+                                    avatar: JSON.parse(req.body.user).avatar
+                                }
+                            }},function(err, res) {
+                        });
+                    }
                 });
             });
         }

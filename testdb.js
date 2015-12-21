@@ -1,23 +1,8 @@
-var User = require('./model/dbModel').user;
-//var record = new User({
-//    username: "shawn",
-//    firstname: '',
-//    lastname: '',
-//    uid: "safdsaf",
-//    email: "jingxiao1216@gmail.com",
-//    password: "123",
-//    status: 0,
-//    company: '',
-//    interested_field: [],
-//    avatar: {url: '', aid: ''}
-//});
-//record.save();
-
-var avatar = {url: "www.", aid: "121"};
-var tag = ["engineering", 'finance'];
-User.update({email: "jingxiao1216@gmail.com"}, {$set: {
-    avatar: avatar,
-    interested_field: tag
-}}, function (err, data) {
-    if (err) throw err;
+var Resume = require('./model/dbModel').resume;
+Resume.update({rid: "ca9b1dab-b6bc8f3e-baad24d2866c"}, {username: "shawn"}, {multi: true}, function (err, data) {
+    if (err) {
+        console.log("sad");
+        throw err;
+    }
+    console.log(data.n);
 });

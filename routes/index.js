@@ -10,6 +10,8 @@ var redisClient = require('../model/dbModel').redisClient;
 var tokenAuth = require('../middleware/tokenAuth');
 
 
+
+
 var tokenExpire = 60 * 60 * 24;
 var actionExpire = 60 * 15;
 

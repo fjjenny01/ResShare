@@ -73,9 +73,9 @@ module.exports.resume = mongoose.model('resume', new Schema({
         link: String,
         subject: String,
         profile_picture_url: String,
-        createdByCurrentUser: Boolean,
-        upvoteCount: 0,
-        userHasUpvoted: Boolean
+        created_by_current_user: Boolean,
+        upvote_count: 0,
+        user_has_upvoted: Boolean
     }]
 }).index({username: "text", subject: "text", tag: "text"}));
 

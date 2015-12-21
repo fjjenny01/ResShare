@@ -31,7 +31,6 @@
                 roundProfilePictures: true,
                 textareaRows: 1,
                 getComments: function(success, error) {
-
                     console.log("get comments");
                     $.ajax({
                         type: 'get',
@@ -43,13 +42,23 @@
                         error: error
                     });
                 },
+                putComment: function(commentJSON, success, error) {
+                    success(commentJSON);
+                    $.ajax({
+                        type: 'put',
+                        url: '/resume/'+ rid + '/comment',
+                        data:{"access_token": localStorage.getItem("ResToken"), commentJSON: JSON.stringify(commentJSON)},
+                        success: function(comment) {
+                            success(comment)
+                        },
+                        error: error
+                    });
+                },
                 postComment: function(commentJSON, success, error) {
                     success(commentJSON);
-                    console.log("commentJSON");
-                    console.log(JSON.stringify(commentJSON));
                     $.ajax({
                         type: 'post',
-                        url: '/resume/'+rid+'/comment',
+                        url: '/resume/' + rid + '/comment',
                         data:{"access_token": localStorage.getItem("ResToken"), commentJSON: JSON.stringify(commentJSON)},
                         success: function(comment) {
                             success(comment)
@@ -65,27 +74,26 @@
                         success: success(),
                         error: error
                     });
+                },
+                upvoteComment: function(commentJSON, success, error) {
+                    success(commentJSON);
+                    console.log(commentJSON.userHasUpvoted);
+                    $.ajax({
+                        type: 'put',
+                        url: '/resume/'+ rid + '/comment',
+                        data: {
+                            "access_token": localStorage.getItem("ResToken"),
+                            commentJSON: JSON.stringify(commentJSON)
+                        },
+                        success: function() {
+                            success(commentJSON)
+                        },
+                        error: error
+                    });
                 }
             });
         });
     </script>
-
-
-    <!--another comment plugin starts here-->
-    <!--<link rel="stylesheet" href="/stylesheets/comment/side-comments.css" />-->
-    <!--<link rel="stylesheet" href="/stylesheets/comment/default-theme.css" />-->
-    <!--<link rel="stylesheet" href="/stylesheets/comment/basics.css" />-->
-
-
-    <!--<link rel="stylesheet" type="text/css" href="../public/stylesheets/comment/inlineDisqussions.css" />-->
-
-
-    <!--<script src="support/js/jquery.js"></script>-->
-    <!--<script src="/javascripts/comment/side-comments.js"></script>-->
-    <!--<script src="/javascripts/comment/test_data.js"></script>-->
-
-
-
 
 
 </head>

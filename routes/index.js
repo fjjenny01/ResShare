@@ -238,8 +238,6 @@ router.get('/resume/:rid/data', tokenAuth.requireToken, function (req, res, next
 
 router.get('/resume/:rid/comment/data', tokenAuth.requireToken, function (req, res, next) {
     Resume.findOne({rid: req.params.rid}, function (err, resume) {
-        console.log("send resume comments");
-        console.log(resume.comments);
         res.send(resume.comments);
     });
 });
@@ -269,18 +267,46 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         }
     }, function (err, data) {
         if (err) throw err;
-        //sqsGetParams.QueueName = req.body.reviewee_id;
-        //sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
-        //    req.body.subject, req.body.link);
-        //if (req.body.author_id != req.body.reviewee_id) {
-        //    sqsGetParams.QueueName = req.body.author_id;
-        //    sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
-        //        req.body.subject, req.body.link);
-        //}
-
         //notify author and reviewee
+        sqsGetParams.QueueName = comment.author_id;
+        sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
+        if (comment.parent != '') {
+            User.findOne({uid: comment.parent}, function (err, parent) {
+                var parent_name = parent.username;
+                sqsGetParams.QueueName = comment.parent;
+                sendMessageToQueue(sqsGetParams, sqsSendParams, parent_name, comment.subject, comment.link);
+            });
+        }
     });
 });
+
+
+router.put('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, next) {
+    var comment = JSON.parse(req.body.commentJSON);
+    var commentId = comment.id;
+    Resume.findOne({rid: req.params.rid}, function(err, resume) {
+        var commentArray = resume.comments;
+        for (var i = commentArray.length - 1; i >= 0; i--) {
+            if (commentArray[i].id == commentId) {
+                Resume.update({rid: req.params.rid}, {
+                    $pull: {
+                        comments: commentArray[i]
+                    }
+                }, function (err, data) {
+                    if (err) throw err;
+                    Resume.update({rid: req.params.rid}, {
+                        $push: {
+                            comments: comment
+                        }
+                    }, function (err, data) {
+                        if (err) throw err;
+                    });
+                });
+            }
+        }
+    });
+});
+
 
 //delete a comment
 router.delete('/resume/:rid/comment', tokenAuth.requireToken, function(req, res, next) {
@@ -293,7 +319,6 @@ router.delete('/resume/:rid/comment', tokenAuth.requireToken, function(req, res,
         if (err) throw err;
     });
 });
-
 
 
 

@@ -129,11 +129,8 @@ function loadProfile(user_data){
     console.log(user_data);
     document.getElementById("prof_img").src = user_data["avatar"]["url"];
     document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
-    if(user_data["firstname"]&&user_data["lastname"]){
-        document.getElementById("name_page").innerHTML= user_data["firstname"]+" "+user_data["lastname"]+"'s HomePage"
-    }else{
-        document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
-    }
+    document.getElementById("name_page").innerHTML= "My HomePage"
+
 
 
 
@@ -226,7 +223,8 @@ function checkedMessage(amessage){
             console.log("login error")}
     })
     console.log(url)
-    window.location.href="www.google.com";
+    /*window.location.href="/resume/ba11f51f-4c02-4f83-ad8a-2341c4c42551"*/
+    window.location.href=url
 
 
 }

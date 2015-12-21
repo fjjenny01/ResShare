@@ -128,11 +128,9 @@ $("#img_upload input:file").change(function (){
 function loadProfile(user_data){
     var prof_tb = document.getElementById("prof_tb");
     console.log(user_data);
-    if(user_data["firstname"]&&user_data["lastname"]){
-        document.getElementById("name_page").innerHTML= user_data["firstname"]+" "+user_data["lastname"]+"'s HomePage"
-    }else{
-        document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
-    }
+
+    document.getElementById("name_page").innerHTML= "My HomePage"
+
     document.getElementById("prof_img").src = user_data["avatar"]["url"];
     document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
     document.getElementById("email").placeholder = user_data["email"];

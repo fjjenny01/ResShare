@@ -327,11 +327,9 @@ function loadProfile(user_data){
   var prof_tb = document.getElementById("user_prof_pic");
   prof_tb.src = user_data["avatar"]["url"];
   console.log(prof_tb.src);
-  if(user_data["firstname"]&&user_data["lastname"]){
-    document.getElementById("name_page").innerHTML= user_data["firstname"]+" "+user_data["lastname"]+"'s HomePage"
-  }else{
-    document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
-  }
+
+    document.getElementById("name_page").innerHTML="My HomePage"
+
 
 }
 

@@ -9,6 +9,7 @@ module.exports.requireToken = function(req, res, next) {
     redisClient.get(token, function(err, reply) {
         if (reply) {
             User.findOne({uid: reply},function(err, user) {
+                console.log("c");
                 if (err) throw err;
                 req.user = user;
                 redisClient.expire(token, 60 * 15);

@@ -281,6 +281,7 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
                         sqsGetParams.QueueName = commentArray[i].current_user_id;
                         var len = comment.link.length;
                         comment.link = comment.link.substring(req.headers.host.length, len);
+                        console.log(comment.link);
                         sendMessageToQueue(sqsGetParams, sqsSendParams, parent_name, comment.subject, comment.link);
                         break;
                     }
@@ -289,6 +290,7 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         }
     });
 });
+
 
 
 router.put('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, next) {

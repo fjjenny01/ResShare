@@ -11,7 +11,6 @@ document.getElementById("get-uid").innerHTML = "";
 var img_dir = "images/"
 var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
 var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
-document.getElementById("checkccc").innerHTML = window.location.href;
 //user_data = {"username":"chaozc", "first name":"Zichen", "lastname":"Chao", "email":"zichen.chao@columbia.edu", "status":1, "company":"Columbia University", "interested_field":["Software Development", "IEOR", "Consulting", "Education"], "avatar":{"url":"../public/images/default_profile.jpg", "aid":""}};
 res_list = [{"username":"jingxiao", "link":"www.google.com", "subject":"HelloHello", "content":"Hi, would you please check my resume?? ...........................................Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??","tag":int_fields}]
 var prof_fields = ["email", "company"];
@@ -223,9 +222,7 @@ function checkedMessage(amessage){
             console.log("login error")}
     })
 
-    //localhost:3000/resume/rid
-    console.log(url);
-    document.getElementById("checkccc").innerHTML = url;
+
     var urlArray= url.split('/');
     var rid = urlArray.splice(-1).pop();
 

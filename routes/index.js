@@ -55,7 +55,6 @@ var sendMessageToQueue = function (sqsGetParams, sqsSendParams, reviewee_name, s
             "subject_link": link
         };
         sqsSendParams.MessageBody = JSON.stringify(obj);
-        console.log(sqsSendParams);
         sqs.sendMessage(sqsSendParams, function (err, data) {
             if (err) throw err;
         });
@@ -283,9 +282,10 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
                         console.log("parent_name: " + parent_name);
                         console.log("full name: " + comment.fullname);
                         sqsGetParams.QueueName = commentArray[i].current_user_id;
-                        console.log(sqsGetParams.QueueName);
-                        sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
-                        return;
+                        if (commentArray[i].current_user_id != comment.author_id) {
+                            sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
+                            return;
+                        }
                     }
                 }
             });

@@ -99,49 +99,6 @@ function initialize(url){
 
 }
 
-$(function(){
-    console.log("start")
-    getMessage()
-    var ms=setInterval("getMessage()",60000);
-
-});
-function getMessage(){
-    console.log("get")
-    $.ajax({
-        url:"/user/profile/"+glb_uid+"/notification/data",
-        type: "GET",
-        async: false,
-        data: {"access_token": localStorage.getItem("ResToken")},
-        dataType: "json",
-        success: function (data) {
-            console.log(data)
-            result_data = data
-            countMessage(data.length,data);
-
-        },
-        error: function(){
-            console.log("login error")}
-    })
-}
-
-function countMessage(rowCount,data){
-    var count = 0
-    if(rowCount > 0) {
-
-        for (var i = 0; i < rowCount; i++) {
-            if(data[i]) {
-                count = count + 1
-            }
-        }
-
-    }
-    if(count>0) {
-        document.getElementById("badge").innerHTML = count.toString()
-    }
-
-
-}
-
 
 
 

@@ -49,27 +49,6 @@ module.exports.user = mongoose.model('user', new Schema({
     avatar: {url: String, aid: String}
 }));
 
-
-//var commentJSON = {
-//    author_id: ,
-//    current_user_id: ,
-//
-//    //id: 'c' +  (this.getComments().length + 1),   // Temporary id
-//    parent: textarea.attr('data-parent') || null,
-//    created: time,
-//    modified: time,
-//    content: this.getTextareaContent(textarea),
-//    fullname: ,
-//    //fullname: this.options.textFormatter(this.options.youText),
-//    link: ,
-//    profilePictureURL: ,
-//    //profilePictureURL: this.options.profilePictureURL,
-//    createdByCurrentUser: true,
-//    upvoteCount: 0,
-//    userHasUpvoted: false
-//};
-
-
 module.exports.resume = mongoose.model('resume', new Schema({
     uid: String,
     username: String,

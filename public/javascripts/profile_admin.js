@@ -16,6 +16,15 @@ var prof_fields = ["email", "company"];
 var int_fields = ["Software Development", "Finance", "Computer Science", "Education", "Engineering"];
 user_data = null;
 res_list = null;
+
+document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
+function remove(id) {
+    return (elem=document.getElementById(id)).parentNode.removeChild(elem);
+}
 $.ajax({
     url: "/user/profile/"+glb_uid+"/data",
     type: "GET",
@@ -29,16 +38,29 @@ $.ajax({
         console.log(user_data);
         self = data.self;
         console.log(self);
+        if (self == false){
+            remove("link-admin");
+            remove("link-notification");
+            remove("link-resume");
+            remove("newpwd");
+            remove("confirmpwd");
+            remove("updatePWbt");
+            remove("result");
+            var h3 = document.createElement("h3");
+            h3.innerText = "You can not update others' account";
+            document.getElementById("main-panel").appendChild(h3);
+        }
+
         loadProfile(user_data);
         //loadEvents(res_list);
     }
 });
 //console.log(m);
-document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
+
+
+
+
+
 //redirect to my home page link
 var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
 document.getElementById("myhome_page_link").href = my_homepage_url

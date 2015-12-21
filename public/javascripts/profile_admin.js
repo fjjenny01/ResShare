@@ -4,8 +4,8 @@ var bucket = new AWS.S3({params: {Bucket: 'czcbucket/avatars', ACL:'public-read'
 console.log(bucket);
 //bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
 glb_uid = document.getElementById("get-uid").innerText;
+document.getElementById("get-uid").innerHTML = "";
 console.log(glb_uid);
-$('#get-uid').innerHTML = "";
 var img_dir = "images/"
 var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
 var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};

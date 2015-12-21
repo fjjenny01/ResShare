@@ -41,7 +41,6 @@ $( document ).ready(function() {
     var pageUrl = "/resume/"+rid+"/data";
     console.log(pageUrl);
 
-    localStorage.setItem("ResToken", "qwertyuiop");
     var url = "";
     $.ajax({
         url: pageUrl,
@@ -60,18 +59,28 @@ $( document ).ready(function() {
             current_user_id = data["current_user_id"];
             link = data["resume"]["link"];
             fullname = data["current_user_name"];
-            profile_picture_url = data["resume"]["avatar"]['url'];
-            console.log(author_id);
-            console.log(current_user_id);
-            console.log(link);
-            console.log(fullname);
-            console.log("profile" + profile_picture_url);
-
-
-
             initialize(url);
         }
     });
+
+    //load the profile pic of current user
+    $.ajax({
+        url: "/user/data",
+        type: "GET",
+        async: false,
+        data: {"access_token": localStorage.getItem("ResToken")},
+        dataType: "json",
+        success: function (data) {
+            user_data = data["user"];
+            console.log("user data DddDDDD");
+            console.log(user_data);
+            profile_picture_url = user_data["avatar"]['url'];
+            //loadProfile(user_data);
+        }
+    });
+
+
+
 });
 
 
@@ -698,12 +707,12 @@ function initialize(url){
             sendButton.removeClass('enabled');
 
             var time = new Date().toISOString();
-
-            console.log('PPPPPPPPPPPPPPPPPPPPPPPP');
-            console.log(author_id);
-            console.log(current_user_id);
-            console.log(fullname);
-            console.log(link);
+            //
+            //console.log('PPPPPPPPPPPPPPPPPPPPPPPP');
+            //console.log(author_id);
+            //console.log(current_user_id);
+            //console.log(fullname);
+            //console.log(link);
             console.log("profile" + profile_picture_url);
             var commentJSON = {
                 author_id: author_id,

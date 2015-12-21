@@ -6,7 +6,6 @@ var selected = -1; //the index of the selected resume
 
 $( document ).ready(function() {
   //load resume list
-  localStorage.setItem("ResToken", "qwertyuiop");
   $.ajax({
     url: "/user/resume/data",
     type: "GET",
@@ -292,7 +291,6 @@ function saveTags(){
 
   });
 
-  alert(tags.toString());
   $('#add_resume_modal').modal('hide');
 }
 
@@ -321,44 +319,6 @@ function uncheckTags(){
     return uuid;
   }
 
-
-
-
-
-function displayReply()
-{
-  alert("display");
-  var table=document.getElementById("commentListBody");
-  var row = table.insertRow(-1);
-
-
-  var td = document.createElement('td');
-  var img = document.createElement("IMG");
-  img.setAttribute('src', '/images/default_profile.jpg');
-  img.setAttribute('class', 'img-circle');
-  img.setAttribute('alt', 'Cinque Terre');
-  img.setAttribute('width','30');
-  img.setAttribute('height','25');
-  td.appendChild(img);
-  row.appendChild(td);
-  var td = document.createElement('td');
-
-  //td.setAttribute('colspan', '4');
-  td.setAttribute('text-align','left');
-  var textarea = document.createElement('textarea');
-  textarea.setAttribute('class','noscroll');
-  //textarea.setAttribute('rows', '1');
-  textarea.setAttribute('cols', '70');
-  var placeholder = 'Jin Fang:@Username:';
-  textarea.value = placeholder;
-  //textarea.setAttribute('placeholder',placeholder);
-
-  td.appendChild(textarea);
-  row.appendChild(td);
-  var data = $('textarea.noscroll').val();
-  $('textarea.noscroll').focus().val('').val(data);
-
-}
 
 //load profile picture of the current user
 function loadProfile(user_data){

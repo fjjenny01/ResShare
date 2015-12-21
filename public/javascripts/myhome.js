@@ -119,6 +119,11 @@ function loadEvents(res_list){
 function loadProfile(user_data){
 	var prof_tb = document.getElementById("prof_tb");
 	console.log(user_data);
+	if(user_data["firstname"]&&user_data["lastname"]){
+		document.getElementById("name_page").innerHTML= user_data["firstname"]+" "+user_data["lastname"]+"'s HomePage"
+	}else{
+		document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
+	}
 	document.getElementById("user_prof_link").href = "/user/profile/"+user_data.uid+"/info?access_token="+localStorage.getItem("ResToken");
 	document.getElementById("prof_img").src = user_data["avatar"]["url"];
 	document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
@@ -240,6 +245,10 @@ function feedDataModal(){
 
 	
 }
+//redirect to my home page link
+var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
+document.getElementById("myhome_page_link").href = my_homepage_url
+document.getElementById("name_page").href = my_homepage_url
 
 function editProfile(){
 	document.getElementById("name").innerHTML = document.getElementById("set-name").value+'<img class="img-hover pull-right" src="../public/images/gear39.png" data-toggle="modal" data-target="#myModal" onclick="feedDataModal()">';

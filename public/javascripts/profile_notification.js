@@ -8,7 +8,6 @@
 //bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
 glb_uid = document.getElementById("get-uid").innerText;
 document.getElementById("get-uid").innerHTML = "";
-console.log(glb_uid);
 var img_dir = "images/"
 var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
 var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
@@ -58,6 +57,11 @@ document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?ac
 document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
+//redirect to my home page link
+var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
+document.getElementById("myhome_page_link").href = my_homepage_url
+document.getElementById("name_page").href = my_homepage_url
+
 function search(){
     var input = document.getElementById("searchInput").value.split(" ").join("+");
     $.ajax({
@@ -205,32 +209,33 @@ function getMessage(){
             console.log("login error")}
     })
 }
-function checkedMessage(amessage){
-    //alert(resultdata)
 
-   /* $.ajax({
-        url:"/user/profile/"+glb_uid+"/notification/data",
-        type: "GET",
+function checkedMessage(amessage){
+    $.ajax({
+        url:"/user/profile/"+glb_uid+"/notification/check",
+        type: "POST",
         async: false,
-        data: {"access_token": localStorage.getItem("ResToken")},
+        data: {"access_token": localStorage.getItem("ResToken"),"receiptHandle":result_data[amessage][0].ReceiptHandle},
         dataType: "json",
         success: function (data) {
             console.log(data)
         },
         error: function(){
             console.log("login error")}
-    })*/
+    })
 
 }
 
 function createNotificationTable(rowCount,data){
+    var count = 0
     if(rowCount > 0) {
         var mp = document.getElementById("createtable");
         mp.innerHTML = "";
         var table = $("<table class=\"table table-striped table-hover \">");
         table.appendTo($("#createtable"));
         for (var i = 0; i < rowCount; i++) {
-            if(data[i].length >0) {
+            if(data[i]) {
+                count = count + 1
                 console.log(i)
                 var tr = $("<tr></tr>");
                 tr.appendTo(table);
@@ -241,10 +246,13 @@ function createNotificationTable(rowCount,data){
         }
         $("#createtable").append("</table>");
     }else{
+        var mp = document.getElementById("createtable");
+        mp.innerHTML = "";
     var noinfo = $("<p class=\"lead\">You don't have any news now.</p>");
         noinfo.appendTo($("#createtable"));
-
-
+        }
+    if(count>0) {
+        document.getElementById("badge").innerHTML = count.toString()
     }
 }
 

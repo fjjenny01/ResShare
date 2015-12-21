@@ -39,6 +39,11 @@ document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?ac
 document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
+//redirect to my home page link
+var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
+document.getElementById("myhome_page_link").href = my_homepage_url
+document.getElementById("name_page").href = my_homepage_url
+
 function search(){
     var input = document.getElementById("searchInput").value.split(" ").join("+");
     $.ajax({
@@ -112,7 +117,11 @@ function loadProfile(user_data){
     console.log(user_data);
     document.getElementById("prof_img").src = user_data["avatar"]["url"];
     document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
-
+    if(user_data["firstname"]&&user_data["lastname"]){
+        document.getElementById("name_page").innerHTML= user_data["firstname"]+" "+user_data["lastname"]+"'s HomePage"
+    }else{
+        document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
+    }
 
 
 }

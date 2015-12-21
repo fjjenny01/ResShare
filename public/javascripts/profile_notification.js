@@ -223,6 +223,8 @@ function checkedMessage(amessage){
         error: function(){
             console.log("login error")}
     })
+    window.location.href=result_data[amessage][0].Body.link;
+
 
 }
 
@@ -240,7 +242,7 @@ function createNotificationTable(rowCount,data){
                 var tr = $("<tr></tr>");
                 tr.appendTo(table);
                 var content = JSON.parse(data[i][0].Body)
-                var td = $("<td>" + "<a>" + content.from + "</a>" + " has discussed with you about " + "<a  value=aaa "+ i +" onclick=javascript:checkedMessage("+i +")>"+  content.data + "</a>"+ "</td>");
+                var td = $("<td>" + "<a>" + content.from + "</a>" + " has discussed with you about " + "<a  value=aaa "+ i +" onclick=javascript:checkedMessage("+i +")>"+  content.subject + "</a>"+ "</td>");
                 td.appendTo(tr)
             }
         }

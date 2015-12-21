@@ -273,11 +273,14 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         if (comment.parent != null) {
             Resume.findOne({rid: req.params.rid}, function (err, resume) {
                 var commentArray = resume.comments;
-                for (var i = 0; i < commentArray; i++) {
+                for (var i = 0; i < commentArray.length; i++) {
                     if (commentArray[i].id == comment.parent){
                         var parent_name = commentArray[i].fullname;
+                        console.log("parent_name: " + parent_name);
                         sqsGetParams.QueueName = commentArray[i].current_user_id;
+                        console.log("queue name: " + sqsGetParams.QueueName);
                         sendMessageToQueue(sqsGetParams, sqsSendParams, parent_name, comment.subject, comment.link);
+                        break;
                     }
                 }
             });

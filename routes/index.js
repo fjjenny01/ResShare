@@ -268,6 +268,7 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         if (err) throw err;
         //notify author and reviewee
         sqsGetParams.QueueName = comment.author_id;
+        console.log("author id: " + sqsGetParams.QueueName);
         sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
         //console.log("comment parent" + comment.parent);
         if (comment.parent != null) {
@@ -278,7 +279,8 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
                         var parent_name = commentArray[i].fullname;
                         console.log("parent_name: " + parent_name);
                         sqsGetParams.QueueName = commentArray[i].current_user_id;
-                        console.log("queue name: " + sqsGetParams.QueueName);
+                        var len = comment.link.length;
+                        comment.link = comment.link.substring(req.headers.host.length, len);
                         sendMessageToQueue(sqsGetParams, sqsSendParams, parent_name, comment.subject, comment.link);
                         break;
                     }

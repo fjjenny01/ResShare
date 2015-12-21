@@ -707,12 +707,6 @@ function initialize(url){
             sendButton.removeClass('enabled');
 
             var time = new Date().toISOString();
-            //
-            //console.log('PPPPPPPPPPPPPPPPPPPPPPPP');
-            //console.log(author_id);
-            //console.log(current_user_id);
-            //console.log(fullname);
-            //console.log(link);
             console.log("profile" + profile_picture_url);
             var commentJSON = {
                 author_id: author_id,

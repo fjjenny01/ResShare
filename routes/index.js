@@ -277,6 +277,8 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
                     if (commentArray[i].id == comment.parent){
                         var parent_name = commentArray[i].fullname;
                         sqsGetParams.QueueName = commentArray[i].current_user_id;
+                        var len = comment.link.length;
+                        comment.link = comment.link.substring(req.headers.host.length, len);
                         sendMessageToQueue(sqsGetParams, sqsSendParams, parent_name, comment.subject, comment.link);
                     }
                 }

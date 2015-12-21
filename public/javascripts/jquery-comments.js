@@ -9,7 +9,6 @@
 /**
  * Created by jinfang on 12/19/15.
  */
-//var url = "";
 
 
 //create uuid for resume name
@@ -132,8 +131,8 @@ function initialize(url){
 
             // Font awesome icon overrides
             spinnerIconURL: '',
-            upvoteIconURL: '',
-            replyIconURL: '',
+            upvoteIconURL: '/images/upvote.png',
+            replyIconURL: '/images/reply.jpg',
             noCommentsIconURL: '',
 
             // Strings to be formatted (for example localization)

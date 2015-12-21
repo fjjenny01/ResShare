@@ -1,11 +1,13 @@
-AWS.config.update({accessKeyId: 'AKIAIKE66OTMJJFT5X7A', secretAccessKey: '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'});
-AWS.config.region = 'us-east-1';
-var bucket = new AWS.S3({params: {Bucket: 'czcbucket/avatars', ACL:'public-read'}});
-console.log(bucket);
+/**
+ * Created by huisu on 12/19/15.
+ */
+//AWS.config.update({accessKeyId: 'AKIAIKE66OTMJJFT5X7A', secretAccessKey: '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'});
+//AWS.config.region = 'us-east-1';
+//var bucket = new AWS.S3({params: {Bucket: 'czcbucket/avatars', ACL:'public-read'}});
+//console.log(bucket);
 //bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
 glb_uid = document.getElementById("get-uid").innerText;
-console.log(glb_uid);
-$('#get-uid').innerHTML = "";
+document.getElementById("get-uid").innerHTML = "";
 var img_dir = "images/"
 var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
 var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
@@ -26,14 +28,30 @@ $.ajax({
         //alert(data);
         console.log(data);
         user_data = data.user;
-        console.log(user_data);
+        //console.log(user_data);
         self = data.self;
-        console.log(self);
+        //console.log(self);
         loadProfile(user_data);
         //loadEvents(res_list);
     }
 });
-//console.log(m);
+/*$.ajax({
+    url: "/user/profile/"+glb_uid+"/topic/data",
+    type: "GET",
+    async: false,
+    data: {"access_token": localStorage.getItem("ResToken")},
+    dataType: "json",
+    success: function (data) {
+        //alert(data);
+        console.log(data);
+        //user_data = data.user;
+        //console.log(user_data);
+        //self = data.self;
+        //console.log(self);
+        //loadProfile(user_data);
+        loadEvents(data);
+    }
+});*/
 document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
 document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
@@ -59,7 +77,7 @@ function search(){
 
 //loadEvents(res_list);
 function loadEvents(res_list){
-    var mp = document.getElementById("main-panel");
+    var mp = document.getElementById("topic-panel");
     mp.innerHTML = "";
     for (var i = 0; i < res_list.length; i++){
         var div = document.createElement("div");
@@ -68,8 +86,12 @@ function loadEvents(res_list){
         imgd.className = "col-lg-2";
         cttd.className = "col-lg-10";
         var img = document.createElement("img");
-        img.className = "img-responsive img-circle";
+        img.className = "img-hover img-responsive img-circle";
         img.src = res_list[i]["avatar"]["url"];
+        var aimg = document.createElement("a");
+        console.log(res_list[i].uid);
+        aimg.href = "/user/profile/"+res_list[i].uid+"/info?access_token="+localStorage.getItem("ResToken");
+        aimg.appendChild(img);
         var fstLine = document.createElement("div");
         var usr = document.createElement("h5");
         usr.innerText = res_list[i]["username"];
@@ -89,7 +111,7 @@ function loadEvents(res_list){
         content.innerText = res_list[i]["content"];
         var dvd = document.createElement("div");
         dvd.className = "divider";
-        imgd.appendChild(img);
+        imgd.appendChild(aimg);
         asub.appendChild(sub);
         cttd.appendChild(asub);
         cttd.appendChild(usr);
@@ -99,19 +121,9 @@ function loadEvents(res_list){
         div.appendChild(dvd);
         mp.appendChild(div);
     }
-
 }
 
-$("#img_upload input:file").change(function (){
-    var file = this.files[0];
-    var reader = new FileReader();
-    // Set preview image into the popover data-content
-    reader.onload = function (e) {
 
-        $("#prof_img").attr('src', e.target.result);
-    }
-    reader.readAsDataURL(file);
-});
 function loadProfile(user_data){
     var prof_tb = document.getElementById("prof_tb");
     console.log(user_data);
@@ -122,6 +134,9 @@ function loadProfile(user_data){
     }else{
         document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
     }
+
+
+
 
 
 }
@@ -170,30 +185,74 @@ function feedDataModal(){
 
 }
 
-function updatePw(){
+$(function(){
+    console.log("start")
+    getMessage()
+    var ms=setInterval("getMessage()",60000);
 
-    var newpw = document.getElementById("newpw").value;
-    var confirmpw = document.getElementById("confirmpw").value;
-    console.log(newpw);
-    console.log(confirmpw);
+});
+function getMessage(){
+    console.log("get")
     $.ajax({
-        url: "/user/profile/password/edit",
-        type: "POST",
-        data: {"access_token": localStorage.getItem("ResToken"), "password": newpw, "confirm_password": confirmpw, "email": user_data.email},
-        datatype: "String",
+        url:"/user/profile/"+glb_uid+"/notification/data",
+        type: "GET",
+        async: false,
+        data: {"access_token": localStorage.getItem("ResToken")},
+        dataType: "json",
         success: function (data) {
-            if (data.indexOf("successfully") == -1){
-                document.getElementById("newpwd").className = "form-group has-warning";
-                document.getElementById("confirmpwd").className = "form-group has-warning";
-                document.getElementById("result").className = "text-danger";
-            }
-            else{
-                document.getElementById("newpwd").className = "form-group";
-                document.getElementById("confirmpwd").className = "form-group";
-                document.getElementById("result").className = "text-success";
-            }
-            document.getElementById("result").innerText = data;
-        }
-    });
+            console.log(data)
+            result_data = data
+            createNotificationTable(data.length,data);
+
+        },
+        error: function(){
+            console.log("login error")}
+    })
+}
+
+function checkedMessage(amessage){
+    $.ajax({
+        url:"/user/profile/"+glb_uid+"/notification/check",
+        type: "POST",
+        async: false,
+        data: {"access_token": localStorage.getItem("ResToken"),"receiptHandle":result_data[amessage][0].ReceiptHandle},
+        dataType: "json",
+        success: function (data) {
+            console.log(data)
+        },
+        error: function(){
+            console.log("login error")}
+    })
 
 }
+
+function createNotificationTable(rowCount,data){
+    var count = 0
+    if(rowCount > 0) {
+        var mp = document.getElementById("createtable");
+        mp.innerHTML = "";
+        var table = $("<table class=\"table table-striped table-hover \">");
+        table.appendTo($("#createtable"));
+        for (var i = 0; i < rowCount; i++) {
+            if(data[i]) {
+                count = count + 1
+                console.log(i)
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                var content = JSON.parse(data[i][0].Body)
+                var td = $("<td>" + "<a>" + content.from + "</a>" + " has discussed with you about " + "<a  value=aaa "+ i +" onclick=javascript:checkedMessage("+i +")>"+  content.data + "</a>"+ "</td>");
+                td.appendTo(tr)
+            }
+        }
+        $("#createtable").append("</table>");
+    }else{
+        var mp = document.getElementById("createtable");
+        mp.innerHTML = "";
+    var noinfo = $("<p class=\"lead\">You don't have any news now.</p>");
+        noinfo.appendTo($("#createtable"));
+        }
+    if(count>0) {
+        document.getElementById("badge").innerHTML = count.toString()
+    }
+}
+

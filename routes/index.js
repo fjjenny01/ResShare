@@ -239,6 +239,9 @@ router.get('/resume/:rid/data', tokenAuth.requireToken, function (req, res, next
 router.get('/resume/:rid/comment/data', tokenAuth.requireToken, function (req, res, next) {
     Resume.findOne({rid: req.params.rid}, function (err, resume) {
         res.send(resume[0].comments);
+        console.log("send resume comments");
+        console.log(resume.comments);
+        res.send(resume.comments);
     });
 });
 
@@ -259,27 +262,30 @@ var sqsGetParams = {
 
 
 router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, next) {
-    var comment = JSON.parse(req.body);
+    var comment = JSON.parse(req.body.commentJSON);
+    comment._id = undefined;
     Resume.update({rid: req.params.rid}, {
         $push: {
             comments: comment
         }
     }, function (err, data) {
         if (err) throw err;
+        //sqsGetParams.QueueName = req.body.reviewee_id;
+        //sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
+        //    req.body.subject, req.body.link);
+        //if (req.body.author_id != req.body.reviewee_id) {
+        //    sqsGetParams.QueueName = req.body.author_id;
+        //    sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
+        //        req.body.subject, req.body.link);
+        //}
 
         //notify author and reviewee
-        sqsGetParams.QueueName = comment.author_id;
-        sendMessageToQueue(sqsGetParams, sqsSendParams, comment.author_id, comment.subject, comment.link);
-        if (comment.parent != '') {
-            sqsGetParams.QueueName = comment.parent;
-            sendMessageToQueue(sqsGetParams, sqsSendParams, comment.parent, comment.subject, comment.link);
-        }
     });
 });
 
 //delete a comment
 router.delete('/resume/:rid/comment', tokenAuth.requireToken, function(req, res, next) {
-    var comment = JSON.parse(req.body);
+    var comment = JSON.parse(req.body.commentJSON);
     Resume.update({rid: req.params.rid}, {
         $pull: {
             comments: comment
@@ -293,6 +299,3 @@ router.delete('/resume/:rid/comment', tokenAuth.requireToken, function(req, res,
 
 
 module.exports = router;
-
-
-

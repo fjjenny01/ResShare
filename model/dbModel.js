@@ -64,6 +64,7 @@ module.exports.resume = mongoose.model('resume', new Schema({
     comments: [{
         author_id: String,
         current_user_id: String,
+        id: String,
         parent: String,
         created: String,
         modified: String,
@@ -71,7 +72,7 @@ module.exports.resume = mongoose.model('resume', new Schema({
         fullname: String,
         link: String,
         subject: String,
-        profilePictureURL: String,
+        profile_picture_url: String,
         createdByCurrentUser: Boolean,
         upvoteCount: 0,
         userHasUpvoted: Boolean

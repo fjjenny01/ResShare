@@ -6,9 +6,9 @@ var redisClient = require('../model/dbModel').redisClient;
 
 module.exports.requireToken = function(req, res, next) {
     var token = (req.body.access_token || req.query.access_token);
+    token = "qwertyuiop";
     redisClient.get(token, function(err, reply) {
         if (reply) {
-            console.log(reply);
             User.findOne({uid: reply},function(err, user) {
                 if (err) throw err;
                 req.user = user;

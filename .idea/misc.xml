@@ -10,8 +10,11 @@
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
+<<<<<<< HEAD
+=======
   <component name="ProjectPlainTextFileTypeManager">
     <file url="file://$PROJECT_DIR$/views/index.html" />
   </component>
   <component name="ProjectRootManager" version="2" />
+>>>>>>> 2bbdc6ee7044bbff47e8328642c3902e6aef0fcf
 </project>

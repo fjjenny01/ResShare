@@ -44,12 +44,12 @@ var createQueue = function (sqsCreateParams) {
 
 
 
-var sendMessageToQueue = function (sqsGetParams, sqsSendParams, reviewee_name, subject, link) {
+var sendMessageToQueue = function (sqsGetParams, sqsSendParams, reviewer_name, subject, link) {
     sqs.getQueueUrl(sqsGetParams, function(err, data) {
         if (err) throw err;
         sqsSendParams.QueueUrl = data.QueueUrl;
         var obj = {
-            "from": reviewee_name,
+            "from": reviewer_name,
             "subject": subject,
             "link": link
         };
@@ -270,16 +270,17 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         }
     }, function (err, data) {
         if (err) throw err;
-        //sqsGetParams.QueueName = req.body.reviewee_id;
-        //sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
-        //    req.body.subject, req.body.link);
-        //if (req.body.author_id != req.body.reviewee_id) {
-        //    sqsGetParams.QueueName = req.body.author_id;
-        //    sendMessageToQueue(sqsGetParams, sqsSendParams, req.body.author_id, req.user.uid, req.body.reviewee_id,
-        //        req.body.subject, req.body.link);
-        //}
 
         //notify author and reviewee
+        sqsGetParams.QueueName = comment.author_id;
+        sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
+        if (comment.parent != '') {
+            User.findOne({uid: comment.parent}, function (err, parent) {
+                var parent_name = parent.username;
+                sqsGetParams.QueueName = comment.parent;
+                sendMessageToQueue(sqsGetParams, sqsSendParams, parent_name, comment.subject, comment.link);
+            });
+        }
     });
 });
 

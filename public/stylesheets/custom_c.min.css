@@ -52,10 +52,17 @@ body{padding-top:50px}body>.navbar{-webkit-transition:background-color 300ms eas
   -moz-filter: brightness(1.10) grayscale(100%) contrast(90%);
   filter: brightness(1.10) grayscale(100%); 
 }
+
+
+.noscroll{
+    overflow: hidden;
+}
+
 .margin-tag {
   margin: .25em;
 }
 
+.highlight { background: yellow; }
 .btn-file {
     position: relative;
     overflow: hidden;
@@ -75,3 +82,4 @@ body{padding-top:50px}body>.navbar{-webkit-transition:background-color 300ms eas
     cursor: inherit;
     display: block;
 }
+

@@ -297,6 +297,7 @@ router.post('/resume/delete', tokenAuth.requireToken, function (req, res, next) 
 //share resume
 router.post('/resume/share', tokenAuth.requireToken, function (req, res, next) {
     var link = req.headers.host + "/resume/" + req.body.rid;
+    console.log(link);
     Resume.update({rid: req.body.rid}, {$set: {
         link: link,
         subject: req.body.subject,

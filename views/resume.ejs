@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/custom_c.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.23.min.js"></script>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    <!--comment plugins starts here!!!!-->
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/jquery-comments.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/font-awesome.min.css">
+
+    <!-- Libraries -->
+    <script type="text/javascript" src="/javascripts/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery-comments.js"></script>
+
+    <!-- Init jquery-comments -->
+    <script type="text/javascript">
+        $(function() {
+            var rid = window.location.href.split("/").pop();
+            $('#comments-container').comments({
+                profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
+                roundProfilePictures: true,
+                textareaRows: 1,
+                getComments: function(success, error) {
+                    console.log("get comments");
+                    $.ajax({
+                        type: 'get',
+                        url: '/resume/'+rid+'/comment/data',
+                        data: {"access_token": localStorage.getItem("ResToken")},
+                        success: function(commentsArray) {
+                            success(commentsArray);
+                        },
+                        error: error
+                    });
+                },
+                putComment: function(commentJSON, success, error) {
+                    success(commentJSON);
+                    $.ajax({
+                        type: 'put',
+                        url: '/resume/'+ rid + '/comment',
+                        data:{"access_token": localStorage.getItem("ResToken"), commentJSON: JSON.stringify(commentJSON)},
+                        success: function(comment) {
+                            success(comment)
+                        },
+                        error: error
+                    });
+                },
+                postComment: function(commentJSON, success, error) {
+                    success(commentJSON);
+                    $.ajax({
+                        type: 'post',
+                        url: '/resume/' + rid + '/comment',
+                        data:{"access_token": localStorage.getItem("ResToken"), commentJSON: JSON.stringify(commentJSON)},
+                        success: function(comment) {
+                            success(comment)
+                        },
+                        error: error
+                    });
+                },
+                deleteComment: function(commentJSON, success, error) {
+                    $.ajax({
+                        type: 'delete',
+                        url: '/resume/'+rid+'/comment',
+                        data: {"access_token": localStorage.getItem("ResToken"), commentJSON: JSON.stringify(commentJSON)},
+                        success: success(),
+                        error: error
+                    });
+                },
+                upvoteComment: function(commentJSON, success, error) {
+                    success(commentJSON);
+                    console.log(commentJSON.userHasUpvoted);
+                    $.ajax({
+                        type: 'put',
+                        url: '/resume/'+ rid + '/comment',
+                        data: {
+                            "access_token": localStorage.getItem("ResToken"),
+                            commentJSON: JSON.stringify(commentJSON)
+                        },
+                        success: function() {
+                            success(commentJSON)
+                        },
+                        error: error
+                    });
+                }
+            });
+        });
+    </script>
+
+
+</head>
+<body>
+
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="../" class="navbar-brand">ResShare</a>
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="">Resumes</a>
+                </li>
+                <li>
+                    <a href="">Function 2</a>
+                </li>
+                <li>
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search Resume">
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="">XX's HomePage</a>
+                </li>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">Mailbox <span class="badge">3</span></a>
+                    <ul class="dropdown-menu" aria-labelledby="download">
+                        <li><a href=""> System <span class="badge">2</span></a></li>
+                        <li class="divider"></li>
+                        <li><a href=""> Request <span class="badge">1</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="bs-docs-section">
+
+        <div class="col-xs-7">
+
+            <iframe id="organigram-iFrame" src="http://docs.google.com/gview?url=https://s3.amazonaws.com/resumefiles/resume_JINFANG.pdf&embedded=true" onmousedown="return false;" onselectstart="return false;"
+                    style="width:600px; height:700px;" frameborder="0"></iframe>
+
+        </div>
+
+        <!--<div id="commentable-container" class="container commentable-container">-->
+            <!--<h1 class="title">-->
+            <!--</h1>-->
+            <!--<p data-section-id="1" class="commentable-section">-->
+            <!--</p>-->
+
+        <!--</div>-->
+
+
+        <!--<table class="table table-responsive table-hover " id="commentList">-->
+
+            <!--<tbody class="active" id="commentListBody">-->
+            <!--<tr id="comment">-->
+                <!--<td>-->
+                    <!--<img src="/images/default_profile.jpg" class="img-circle" alt="Cinque Terre" width="30" height="25">-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<label>User Name</label><label>It looks pretty good to me. Though you can describe more about what you did-->
+                    <!--instead of what the team did in your group projects. Hope that helps!</label>-->
+                    <!--<a href="#" id="reply" class="btn btn-link" onclick="displayResult()">Reply</a>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<img src="/images/default_profile.jpg" class="img-circle" alt="Cinque Terre" width="30" height="25">-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<label>User Name</label><label>It looks pretty good to me. Though you can describe more about what you did-->
+                    <!--instead of what the team did in your group projects. Hope that helps!</label>-->
+                    <!--<a href="#" class="btn btn-link" onclick="return false">Reply</a>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+
+        <div class="col-xs-4">
+            <div id="comments-container"></div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

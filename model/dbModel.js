@@ -50,7 +50,6 @@ module.exports.user = mongoose.model('user', new Schema({
 }));
 
 
-
 module.exports.resume = mongoose.model('resume', new Schema({
     uid: String,
     username: String,
@@ -66,6 +65,7 @@ module.exports.resume = mongoose.model('resume', new Schema({
     comments: [{
         author_id: String,
         current_user_id: String,
+        id: String,
         parent: String,
         created: String,
         modified: String,
@@ -73,10 +73,10 @@ module.exports.resume = mongoose.model('resume', new Schema({
         fullname: String,
         link: String,
         subject: String,
-        profilePictureURL: String,
-        createdByCurrentUser: Boolean,
-        upvoteCount: 0,
-        userHasUpvoted: Boolean
+        profile_picture_url: String,
+        created_by_current_user: Boolean,
+        upvote_count: 0,
+        user_has_upvoted: Boolean
     }]
 }).index({username: "text", subject: "text", tag: "text"}));
 

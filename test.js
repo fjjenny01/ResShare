@@ -156,6 +156,11 @@
 
 
 
+//var a = '///httpasd://localhost:3000/resume/12312312ewdsda/';
+//var b = a.split('/');
+//var rid = b.splice(-1).pop();
+//console.log('/resume/' + rid);
+
 
 
 

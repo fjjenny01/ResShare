@@ -4,27 +4,60 @@ var client = new elasticsearch.Client({
     log: 'trace'
 });
 
+//client.create({
+//    index: 'reshare',
+//    type: 'resume',
+//    body: {
+//        "uid": "abcde",
+//        "username": "shawn",
+//        "link": "www.google.com",
+//        "subject": "Can anyone help me with my resume?",
+//        "content": "I don't know what to do, my resume is messy.",
+//        "comments": [],
+//        "tag": [
+//            "Engineering"
+//        ],
+//        "avatar": {
+//            "aid": "sadsdasfjsakhjlskadjklaj",
+//            "url": "https://s3.amazonaws.com/czcbucket%2Favatars/1450414554170.jpeg"
+//        },
+//    }
+//}, function (error, response) {
+//
+//});
+
+
 client.create({
     index: 'reshare',
     type: 'resume',
     body: {
-        "uid": "abcde",
-        "username": "shawn",
-        "link": "www.google.com",
-        "subject": "Can anyone help me with my resume?",
-        "content": "I don't know what to do, my resume is messy.",
+        "uid": "e7565310-a798-11e5-8246-195085142db7",
+        "username": "Jin Fang",
+        "rid": "cc955709-b5d8-40a7-aa7f-818ed61a050d",
+        "resumename": "resume_JINFANG.pdf",
+        "url": "https://s3.amazonaws.com/czcbucket/cc955709-b5d8-40a7-aa7f-818ed61a050d.pdf",
+        "link": "localhost:3000/resume/cc955709-b5d8-40a7-aa7f-818ed61a050d",
+        "subject": "Share my first Resume",
+        "content": "I want a software engineer positon!!!",
+        "status": 1,
         "comments": [],
         "tag": [
-            "Engineering"
+            "Software Development"
         ],
         "avatar": {
-            "aid": "sadsdasfjsakhjlskadjklaj",
-            "url": "https://s3.amazonaws.com/czcbucket%2Favatars/1450414554170.jpeg"
+            "aid": "e7565311-a798-11e5-8246-195085142db7",
+            "url": "https://s3.amazonaws.com/czcbucket%2Favatars/1450671808362.jpeg"
         },
+        "__v": 0
     }
 }, function (error, response) {
 
 });
+
+
+
+
+
 
 //client.search({
 //    index: 'reshare',

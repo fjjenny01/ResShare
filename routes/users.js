@@ -63,6 +63,7 @@ router.post('/search', function(req, res, next) {
     //    .exec(function (err, data) {
     //        res.send(data);
     //    });
+    console.log("a");
     console.log(req.query.kw);
     elasticSearchClient.search({
         index: 'reshare',
@@ -77,10 +78,12 @@ router.post('/search', function(req, res, next) {
             }
         }
     }, function (error, response) {
+        console.log("b");
         var array = [];
         for (var i = 0; i < response.hits.hits.length; i++) {
             array[i] = response.hits.hits[i]._source;
         }
+        console.log(array);
         res.send(array);
     });
 });
@@ -239,6 +242,7 @@ router.post('/profile/:uid/notification/check', tokenAuth.requireToken, function
         sqsDeleteParams.QueueUrl = data.QueueUrl;
         sqs.deleteMessage(sqsDeleteParams, function(err, data) {
             if (err) throw err;
+            res.send({"success": true});
         });
     });
 });

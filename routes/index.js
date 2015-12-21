@@ -151,7 +151,6 @@ router.post('/forgot', function(req, res, next) {
                     return;
                 }
                 var token = uuid.v1();
-                console.log('forgot: ' + user.uid);
                 redisClient.set(token, user.uid);
                 redisClient.expire(token, tokenExpire);//token will expire after 24 hours
                 emailParams.Message.Subject.Data = 'Reset The Password';

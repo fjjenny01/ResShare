@@ -140,6 +140,8 @@ function addResume(){
       alert("please choose a resume to upload");
     }
 
+    hasChosen = false;
+
   }
 
 

@@ -10,6 +10,25 @@
  * Created by jinfang on 12/19/15.
  */
 //var url = "";
+
+
+//create uuid for resume name
+function generateUUID() {
+    var d = new Date().getTime();
+    if (window.performance && typeof window.performance.now === "function") {
+        d += performance.now();
+        ; //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    return uuid;
+}
+
+
+
 var author_id = "";
 var current_user_id = "";
 var link = "";
@@ -20,7 +39,7 @@ $( document ).ready(function() {
     //console.log(typeof window.location.href );
     //TODO
     var rid = window.location.href.split("/").pop();
-    var pageUrl = "/resume/"+rid+"/data"
+    var pageUrl = "/resume/"+rid+"/data";
     console.log(pageUrl);
 
     localStorage.setItem("ResToken", "qwertyuiop");
@@ -47,28 +66,13 @@ $( document ).ready(function() {
             console.log(current_user_id);
             console.log(link);
             console.log(fullname);
-            console.log(profile_picture_url);
+            console.log("profile" + profile_picture_url);
 
 
 
             initialize(url);
         }
     });
-
-    //load the profile pic of current user
-    $.ajax({
-        url: "/user/data",
-        type: "GET",
-        async: false,
-        data: {"access_token": localStorage.getItem("ResToken")},
-        dataType: "json",
-        success: function (data) {
-            user_data = data["user"];
-            console.log(user_data);
-            //loadProfile(user_data);
-        }
-    });
-
 });
 
 
@@ -83,7 +87,7 @@ function initialize(url){
 
 
 
-
+/****************************jQuery************************************/
 
 
 (function (factory) {
@@ -172,6 +176,7 @@ function initialize(url){
 
             fieldMappings: {
                 author_id: 'author_id',
+                current_user_id: 'current_user_id',
                 id: 'id',
                 parent: 'parent',
                 created: 'created',
@@ -700,21 +705,18 @@ function initialize(url){
             console.log(current_user_id);
             console.log(fullname);
             console.log(link);
-            console.log(profile_picture_url);
+            console.log("profile" + profile_picture_url);
             var commentJSON = {
                 author_id: author_id,
-                current_user_id:current_user_id ,
-
-                //id: 'c' +  (this.getComments().length + 1),   // Temporary id
+                current_user_id: current_user_id,
+                id: generateUUID(),
                 parent: textarea.attr('data-parent') || null,
                 created: time,
                 modified: time,
                 content: this.getTextareaContent(textarea),
                 fullname: fullname,
-                //fullname: this.options.textFormatter(this.options.youText),
                 link: link,
                 subject: subject,
-                //profilePictureURL: ,
                 profilePictureURL: profile_picture_url,
                 createdByCurrentUser: true,
                 upvoteCount: 0,

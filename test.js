@@ -1,24 +1,24 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-mongoose.connect("mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare");
-var elasticsearch = require('elasticsearch');
-var client = new elasticsearch.Client({
-    host: '52.90.198.176:9200',
-    log: 'trace'
-});
+//var mongoose = require('mongoose');
+//var Schema = mongoose.Schema;
+//mongoose.connect("mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare");
+//var elasticsearch = require('elasticsearch');
+//var client = new elasticsearch.Client({
+//    host: '52.90.198.176:9200',
+//    log: 'trace'
+//});
 
 
 //var User = require('./model/dbModel').user;
-var Resume = require('./model/dbModel').resume;
-Resume.findOne({username: 'chazc'}, function (err, resume) {
-    resume._id = undefined;
-    client.create({
-        index: 'reshare',
-        type: 'resume',
-        body: resume
-    }, function (error, response) {
-    });
-});
+//var Resume = require('./model/dbModel').resume;
+//Resume.findOne({username: 'chazc'}, function (err, resume) {
+//    resume._id = undefined;
+//    client.create({
+//        index: 'reshare',
+//        type: 'resume',
+//        body: resume
+//    }, function (error, response) {
+//    });
+//});
 
 
 //
@@ -133,9 +133,25 @@ Resume.findOne({username: 'chazc'}, function (err, resume) {
 
 
 
+function getDateTime() {
+    var date = new Date();
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+    var min  = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+    var sec  = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+    var day  = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+    return year + '-' + month + '-' + day;
+}
 
 
 
+console.log(getDateTime());
 
 
 

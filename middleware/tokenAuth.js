@@ -9,7 +9,6 @@ module.exports.requireToken = function(req, res, next) {
     token = "qwertyuiop";
     redisClient.get(token, function(err, reply) {
         if (reply) {
-            console.log(reply);
             User.findOne({uid: reply},function(err, user) {
                 if (err) throw err;
                 req.user = user;

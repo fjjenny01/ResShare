@@ -10,6 +10,7 @@
     <script src="/javascripts/bootstrap.min.js"></script>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.23.min.js"></script>
 
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
     <!--comment plugins starts here!!!!-->
@@ -17,10 +18,8 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/jquery-comments.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/font-awesome.min.css">
 
-    <!-- Data -->
-    <script type="text/javascript" src="/javascripts/comments-data.js"></script>
-
     <!-- Libraries -->
+    <script type="text/javascript" src="/javascripts/jquery-1.9.0.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery-comments.js"></script>
 
     <!-- Init jquery-comments -->
@@ -36,11 +35,9 @@
                     console.log("get comments");
                     $.ajax({
                         type: 'get',
-                        url: '/resume/'+rid+'/data',
+                        url: '/resume/'+rid+'/comment/data',
+                        data: {"access_token": localStorage.getItem("ResToken")},
                         success: function(commentsArray) {
-                            console.log("success");
-                            console.log(commentsArray['resume']['comments']);
-
                             success(commentsArray);
                         },
                         error: error
@@ -48,10 +45,12 @@
                 },
                 postComment: function(commentJSON, success, error) {
                     success(commentJSON);
+                    console.log("commentJSON");
+                    console.log(JSON.stringify(commentJSON));
                     $.ajax({
                         type: 'post',
                         url: '/resume/'+rid+'/comment',
-                        data: commentJSON,
+                        data:{"access_token": localStorage.getItem("ResToken"), commentJSON: JSON.stringify(commentJSON)},
                         success: function(comment) {
                             success(comment)
                         },
@@ -62,7 +61,7 @@
                     $.ajax({
                         type: 'delete',
                         url: '/resume/'+rid+'/comment',
-                        data: commentJSON,
+                        data: {"access_token": localStorage.getItem("ResToken"), commentJSON: JSON.stringify(commentJSON)},
                         success: success(),
                         error: error
                     });

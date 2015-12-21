@@ -193,7 +193,6 @@ router.post('/resend', function(req, res, next) {
 
 
 router.post('/login', function(req, res) {
-    console.log(req.body);
     User.findOne({ email: req.body.email }, function(err, user) {
         if (!user)
             res.send({"success":true,"message":"ok","data":"Incorrect email or password."});
@@ -225,7 +224,7 @@ router.post('/logout', tokenAuth.requireToken, function(req, res, next) {
 
 /****************************** Resume Page *************************************/
 
-router.get('/resume/:rid', tokenAuth.requireToken, function (req, res, next) {
+router.get('/resume/:rid', /*tokenAuth.requireToken*/ function (req, res, next) {
     res.render('resume');
 });
 
@@ -270,7 +269,8 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         //notify author and reviewee
         sqsGetParams.QueueName = comment.author_id;
         sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
-        if (comment.parent != '') {
+        console.log("comment parent" + comment.parent);
+        if (comment.parent != null) {
             User.findOne({uid: comment.parent}, function (err, parent) {
                 var parent_name = parent.username;
                 sqsGetParams.QueueName = comment.parent;

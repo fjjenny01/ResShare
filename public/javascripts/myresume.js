@@ -6,7 +6,6 @@ var selected = -1; //the index of the selected resume
 
 $( document ).ready(function() {
   //load resume list
-  localStorage.setItem("ResToken", "qwertyuiop");
   $.ajax({
     url: "/user/resume/data",
     type: "GET",

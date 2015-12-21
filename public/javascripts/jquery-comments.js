@@ -41,7 +41,6 @@ $( document ).ready(function() {
     var pageUrl = "/resume/"+rid+"/data";
     console.log(pageUrl);
 
-    localStorage.setItem("ResToken", "qwertyuiop");
     var url = "";
     $.ajax({
         url: pageUrl,

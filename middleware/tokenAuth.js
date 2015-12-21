@@ -16,6 +16,7 @@ module.exports.requireToken = function(req, res, next) {
             });
         }
         else {
+            console.log("aa");
             res.render('home_page');
         }
     });

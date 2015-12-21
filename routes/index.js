@@ -270,7 +270,6 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         sqsGetParams.QueueName = comment.author_id;
         console.log("author id: " + sqsGetParams.QueueName);
         sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
-        //console.log("comment parent" + comment.parent);
         if (comment.parent != null) {
             Resume.findOne({rid: req.params.rid}, function (err, resume) {
                 var commentArray = resume.comments;

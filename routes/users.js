@@ -58,7 +58,7 @@ router.get('/data', tokenAuth.requireToken, function (req, res, next) {
 
 //search
 //url: /user/search/?kw=xxx
-router.post('/search', tokenAuth.requireToken, function(req, res, next) {
+router.post('/search', function(req, res, next) {
     //Resume.find({$text: {$search: req.query.kw}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}})
     //    .exec(function (err, data) {
     //        res.send(data);

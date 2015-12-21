@@ -36,7 +36,6 @@ var sqsGetParams = {
 /****************************** News Page ***********************************/
 
 router.get('/', tokenAuth.requireToken, function (req, res, next) {
-    console.log("sd")
     res.render('user');
 });
 

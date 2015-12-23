@@ -1,3 +1,6 @@
+/**
+ * Created by jingxiaogu on 12/2/15.
+ */
 var express = require('express');
 var router = express.Router();
 var User = require('../model/dbModel').user;

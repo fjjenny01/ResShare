@@ -1,10 +1,10 @@
 # ResShare
-Introduction
+##Introduction
 
 ResShare is a P2P website where users can share their resumes and comments. 
 The website is deployed on AWS Elasticbeanstalk. The application uses AWS SES, SQS, S3, elasticsearch, etc. Other databases locate on MongoDB and redis.
 
-Instruction to use
+##Instruction to use
 
 
 The login page is here: http://resshare-env.elasticbeanstalk.com

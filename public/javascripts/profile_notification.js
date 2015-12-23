@@ -1,11 +1,6 @@
 /**
  * Created by huisu on 12/19/15.
  */
-//AWS.config.update({accessKeyId: 'AKIAIKE66OTMJJFT5X7A', secretAccessKey: '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'});
-//AWS.config.region = 'us-east-1';
-//var bucket = new AWS.S3({params: {Bucket: 'czcbucket/avatars', ACL:'public-read'}});
-//console.log(bucket);
-//bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
 glb_uid = document.getElementById("get-uid").innerText;
 document.getElementById("get-uid").innerHTML = "";
 var img_dir = "images/"

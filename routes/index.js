@@ -10,8 +10,6 @@ var redisClient = require('../model/dbModel').redisClient;
 var tokenAuth = require('../middleware/tokenAuth');
 
 
-
-
 var tokenExpire = 60 * 60 * 24;
 var actionExpire = 60 * 15;
 
@@ -109,7 +107,6 @@ router.post('/register', function(req, res, next) {
                 avatar: {url: "https://s3.amazonaws.com/reshare%2Favatar/default-profile.png", aid: uuid.v1()}
             });
             var token = uuid.v1();
-            console.log('regis uid: ' + uid);
             redisClient.set(token, uid);
             redisClient.expire(token, tokenExpire);//token will expire after 24 hours
             record.save(function(err) {
@@ -268,29 +265,27 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         }
     }, function (err, data) {
         if (err) throw err;
+
         //notify author and reviewee
         sqsGetParams.QueueName = comment.author_id;
-        console.log("author id: " + sqsGetParams.QueueName);
-        //var len = comment.link.length;
-        //comment.link = comment.link.substring(req.headers.host.length, len);
         sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
         if (comment.parent != null) {
             Resume.findOne({rid: req.params.rid}, function (err, resume) {
+                if (err) throw err;
                 var commentArray = resume.comments;
                 for (var i = 0; i < commentArray.length; i++) {
                     if (commentArray[i].id == comment.parent){
-                        var parent_name = commentArray[i].fullname;
-                        console.log("parent_name: " + parent_name);
-                        console.log("full name: " + comment.fullname);
                         sqsGetParams.QueueName = commentArray[i].current_user_id;
                         if (commentArray[i].current_user_id != comment.author_id) {
                             sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
-                            return;
+                            res.send('success');
                         }
                     }
                 }
+                res.send('success');
             });
         }
+        res.send('success');
     });
 });
 
@@ -299,6 +294,7 @@ router.put('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, n
     var comment = JSON.parse(req.body.commentJSON);
     var commentId = comment.id;
     Resume.findOne({rid: req.params.rid}, function(err, resume) {
+        if (err) throw err;
         var commentArray = resume.comments;
         for (var i = commentArray.length - 1; i >= 0; i--) {
             if (commentArray[i].id == commentId) {
@@ -314,6 +310,7 @@ router.put('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, n
                         }
                     }, function (err, data) {
                         if (err) throw err;
+                        else res.send('success');
                     });
                 });
             }
@@ -331,6 +328,7 @@ router.delete('/resume/:rid/comment', tokenAuth.requireToken, function(req, res,
         }
     }, function (err, data) {
         if (err) throw err;
+        else res.send('success');
     });
 });
 

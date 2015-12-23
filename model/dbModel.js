@@ -8,15 +8,15 @@ var elasticsearch = require('elasticsearch');
 
 
 //connect to DB
-var dbUrl = 'mongodb://jingxiao:jingxiao@ds059654.mongolab.com:59654/reshare';
+var dbUrl = '';
 mongoose.connect(dbUrl, function() {
     console.log('db connected');
 });
 
 //connect to redis
-var host = 'pub-redis-18392.us-east-1-2.2.ec2.garantiadata.com';
+var host = '';
 var port = 18392;
-var password = 'jingxiao';
+var password = '';
 var client = redis.createClient(port, host); //creates a new client
 client.auth(password);
 client.on('connect', function() {
@@ -26,7 +26,7 @@ client.on('connect', function() {
 
 //connect to elasticsearch
 var elsClient = new elasticsearch.Client({
-    host: '52.90.198.176:9200',
+    host: '',
     log: 'trace'
 });
 

@@ -1,4 +1,4 @@
-AWS.config.update({accessKeyId: 'AKIAIKE66OTMJJFT5X7A', secretAccessKey: '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'});
+AWS.config.update({accessKeyId: '', secretAccessKey: ''});
 AWS.config.region = 'us-east-1';
 var bucket = new AWS.S3({params: {Bucket: 'czcbucket/avatars', ACL:'public-read'}});
 console.log(bucket);

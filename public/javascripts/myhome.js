@@ -1,17 +1,6 @@
-/*
-AWS.config.update({accessKeyId: 'AKIAIKE66OTMJJFT5X7A', secretAccessKey: '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'});
-AWS.config.region = 'us-east-1';
-var bucket = new AWS.S3({params: {Bucket: 'czcbucket'}});
-console.log(bucket);
-bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
-*/
-
 var img_dir = "images/"
 var map_img = {"email":img_dir+"mail4.png", "company":img_dir+"graduation-cap2.png"}
-//var map = {"name":"Name", "edu":"Education", "loc":"Location", "int_fields":"Interested Fields", "email":"Email"};
 
-//user_data = {"username":"chaozc", "first name":"Zichen", "lastname":"Chao", "email":"zichen.chao@columbia.edu", "status":1, "company":"Columbia University", "interested_field":["Software Development", "IEOR", "Consulting", "Education"], "avatar":{"url":"../public/images/default_profile.jpg", "aid":""}};
-//res_list = [{"username":"jingxiao", "link":"www.google.com", "subject":"HelloHello", "content":"Hi, would you please check my resume?? ...........................................Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??Hi, would you please check my resume??","tag":int_fields}]
 var prof_fields = ["email", "company"];
 var int_fields = ["Software Development", "IEOR", "Consulting", "Education"];
 

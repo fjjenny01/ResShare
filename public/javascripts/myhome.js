@@ -71,7 +71,7 @@ function loadEvents(res_list){
 		img.src = res_list[i]["avatar"]["url"];
 		var aimg = document.createElement("a");
 		console.log(res_list[i].uid);
-		aimg.href = "/user/profile/"+res_list[i].uid+"/info?access_token="+localStorage.getItem("ResToken");
+		aimg.href = "/user/profile/"+res_list[i].uid+"/info";
 		aimg.appendChild(img);
 		var fstLine = document.createElement("div");
 		var usr = document.createElement("h5");
@@ -123,7 +123,7 @@ function loadProfile(user_data){
 	}else{
 		document.getElementById("name_page").innerHTML= user_data["username"]+"'s HomePage"
 	}
-	document.getElementById("user_prof_link").href = "/user/profile/"+user_data.uid+"/info?access_token="+localStorage.getItem("ResToken");
+	document.getElementById("user_prof_link").href = "/user/profile/"+user_data.uid+"/info";
 	document.getElementById("prof_img").src = user_data["avatar"]["url"];
 	document.getElementById("name").innerHTML = user_data["firstname"]+" "+user_data["lastname"]+"("+user_data["username"]+")";
 	for (var i = 0; i < prof_fields.length; ++i){
@@ -245,7 +245,7 @@ function feedDataModal(){
 	
 }
 //redirect to my home page link
-var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
+var my_homepage_url =  "/user";
 document.getElementById("myhome_page_link").href = my_homepage_url
 document.getElementById("name_page").href = my_homepage_url
 

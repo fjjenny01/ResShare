@@ -12,12 +12,13 @@ $( document ).ready(function() {
     data: {"access_token": localStorage.getItem("ResToken")},
     dataType: "json",
     success: function (data) {
-      console.log(data);
       for (var i=0;i<data.length;i++){
         resumelist.push(data[i]["resumename"]);
         resumelist.push(data[i]["rid"]);
         resumelist.push(data[i]["url"]);
         resumelist.push(data[i]["status"]);
+        //resumelist.push(data[i]["uid"]);
+
       }
 
       initializeResumeList();
@@ -33,11 +34,10 @@ $( document ).ready(function() {
     dataType: "json",
     success: function (data) {
       user_data = data["user"];
-      console.log(user_data);
       loadProfile(user_data);
     }
   });
-  var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
+  var my_homepage_url =  "/user";
   document.getElementById("myhome_page_link").href = my_homepage_url
   document.getElementById("name_page").href = my_homepage_url
 
@@ -51,8 +51,6 @@ function initializeResumeList(){
   while(table.rows.length > 0) {
     table.deleteRow(0);
   }
-  console.log("resumelist");
-  //console.log(resumelist.length);
   for (var i=0;i<resumelist.length;i++){
     if (i%4==0){
       var real_i = i/4;
@@ -112,7 +110,6 @@ function addResume(){
         //url = data.Location;
         url = "https://s3.amazonaws.com/czcbucket/"+uuid+".pdf";
         //console.log(url);
-        console.log(tags);
 
         $.ajax({
           url: "/user/resume/upload",
@@ -206,10 +203,8 @@ function addResume(){
           row.addClass('highlight');
         }
 
-        console.log(row["context"]);
         var row_id = row["context"].getAttributeNode("id").value;
-        console.log('row_id');
-        console.log(row_id);
+
 
         selected =row_id-1;
         hasSelected=true;
@@ -217,10 +212,8 @@ function addResume(){
         //update the iframe
         var preview = document.getElementById("organigram-iFrame");
         var url = resumelist[selected*4+2];
-        console.log("url");
-        console.log(url);
+
         var src = "http://docs.google.com/gview?"+"url="+ url+ "&embedded=true";
-        //console.log(src);
         preview.setAttribute('src',src);
 
 
@@ -256,12 +249,9 @@ function commitShare(){
   var fileName = document.getElementById("fileName");
   var rid = resumelist[selected *4 + 1];
   fileName.innerHTML = resumelist[selected*4];
-  console.log(fileName.innerHTML);
   var subjectText = document.getElementById("subject").value;
-  console.log(subjectText);
   var contentText = document.getElementById("content").value;
 
-  console.log(contentText);
   if (subjectText!="" && contentText!=""){
 
     $.ajax({
@@ -326,7 +316,6 @@ function uncheckTags(){
 function loadProfile(user_data){
   var prof_tb = document.getElementById("user_prof_pic");
   prof_tb.src = user_data["avatar"]["url"];
-  console.log(prof_tb.src);
 
     document.getElementById("name_page").innerHTML="My HomePage"
 

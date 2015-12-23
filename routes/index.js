@@ -13,6 +13,7 @@ var redisClient = require('../model/dbModel').redisClient;
 var tokenAuth = require('../middleware/tokenAuth');
 
 
+
 var tokenExpire = 60 * 60 * 24;
 var actionExpire = 60 * 15;
 
@@ -48,7 +49,6 @@ var createQueue = function (sqsCreateParams) {
 
 
 var sendMessageToQueue = function (sqsGetParams, sqsSendParams, reviewee_name, subject, link) {
-    console.log("11");
     sqs.getQueueUrl(sqsGetParams, function(err, data) {
         if (err) throw err;
         sqsSendParams.QueueUrl = data.QueueUrl;
@@ -226,7 +226,7 @@ router.post('/logout', tokenAuth.requireToken, function(req, res, next) {
 
 /****************************** Resume Page *************************************/
 
-router.get('/resume/:rid', /*tokenAuth.requireToken*/ function (req, res, next) {
+router.get('/resume/:rid', function (req, res, next) {
     res.render('resume');
 });
 
@@ -268,27 +268,23 @@ router.post('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, 
         }
     }, function (err, data) {
         if (err) throw err;
-
         //notify author and reviewee
         sqsGetParams.QueueName = comment.author_id;
         sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
         if (comment.parent != null) {
             Resume.findOne({rid: req.params.rid}, function (err, resume) {
-                if (err) throw err;
                 var commentArray = resume.comments;
                 for (var i = 0; i < commentArray.length; i++) {
                     if (commentArray[i].id == comment.parent){
                         sqsGetParams.QueueName = commentArray[i].current_user_id;
                         if (commentArray[i].current_user_id != comment.author_id) {
                             sendMessageToQueue(sqsGetParams, sqsSendParams, comment.fullname, comment.subject, comment.link);
-                            res.send('success');
+                            return;
                         }
                     }
                 }
-                res.send('success');
             });
         }
-        res.send('success');
     });
 });
 
@@ -297,7 +293,6 @@ router.put('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, n
     var comment = JSON.parse(req.body.commentJSON);
     var commentId = comment.id;
     Resume.findOne({rid: req.params.rid}, function(err, resume) {
-        if (err) throw err;
         var commentArray = resume.comments;
         for (var i = commentArray.length - 1; i >= 0; i--) {
             if (commentArray[i].id == commentId) {
@@ -313,7 +308,6 @@ router.put('/resume/:rid/comment', tokenAuth.requireToken, function (req, res, n
                         }
                     }, function (err, data) {
                         if (err) throw err;
-                        else res.send('success');
                     });
                 });
             }
@@ -331,7 +325,7 @@ router.delete('/resume/:rid/comment', tokenAuth.requireToken, function(req, res,
         }
     }, function (err, data) {
         if (err) throw err;
-        else res.send('success');
+        res.send('success');
     });
 });
 

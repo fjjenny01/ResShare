@@ -36,7 +36,7 @@ var sqsGetParams = {
 
 /****************************** News Page ***********************************/
 
-router.get('/', /*tokenAuth.requireToken*/ function (req, res, next) {
+router.get('/', function (req, res, next) {
     res.render('user');
 });
 
@@ -89,20 +89,19 @@ router.post('/search', function(req, res, next) {
 
 /*************************** User Profile Page ******************************/
 
-router.get('/profile/:uid/info', tokenAuth.requireToken, function(req, res, next) {
-    console.log(req.params.uid);
+router.get('/profile/:uid/info', function(req, res, next) {
     res.render('profile_info', {uid: req.params.uid});
 });
 
-router.get('/profile/:uid/admin', tokenAuth.requireToken, function (req, res, next) {
+router.get('/profile/:uid/admin', function (req, res, next) {
     res.render('profile_admin', {uid: req.params.uid});
 });
 
-router.get('/profile/:uid/topic', tokenAuth.requireToken, function (req, res, next) {
+router.get('/profile/:uid/topic', function (req, res, next) {
     res.render('profile_topic', {uid: req.params.uid});
 });
 
-router.get('/profile/:uid/notification', tokenAuth.requireToken, function (req, res, next) {
+router.get('/profile/:uid/notification', function (req, res, next) {
     res.render('profile_notification', {uid: req.params.uid});
 });
 
@@ -113,7 +112,6 @@ router.get('/profile/:uid/data', tokenAuth.requireToken, function (req, res, nex
     else {
         User.findOne({uid: req.params.uid}, function (err, user) {
             if (err) throw err;
-
             res.send({user: user, self:false});
         });
     }
@@ -126,9 +124,7 @@ router.post('/profile/password/edit', tokenAuth.requireToken, function (req, res
         res.send("passwords don't match, please try again");
         return;
     }
-    console.log(req.body.password);
     var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-    console.log(hash);
     User.update({uid: req.user.uid}, {password: hash}, function (err, result) {
         if (err) {
             res.send("internal err");
@@ -156,6 +152,7 @@ router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, ne
                     return;
                 }
                 Resume.find({uid: req.user.uid}, function (err, resumeArray) {
+                    if (err) throw err;
                     for (var i = 0; i < resumeArray.length; i++) {
                         elasticSearchClient.update({
                             index: 'reshare',
@@ -166,7 +163,7 @@ router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, ne
                                     username: JSON.parse(req.body.user).username
                                 }
                             }},function(err, res) {
-                            res.send('success');
+                            if (err) throw err;
                         });
                     }
                 });
@@ -190,7 +187,7 @@ router.post('/profile/info/edit', tokenAuth.requireToken, function (req, res, ne
                                     avatar: JSON.parse(req.body.user).avatar
                                 }
                             }},function(err, res) {
-                            res.send('success');
+                            if (err) throw err;
                         });
                     }
                 });
@@ -233,6 +230,7 @@ router.get('/profile/:uid/notification/data', tokenAuth.requireToken, function(r
                 });
             }
             function check(message){
+
                 if (message.length >= num) {
                     res.send(message)
                 }
@@ -261,8 +259,8 @@ router.post('/profile/:uid/notification/check', tokenAuth.requireToken, function
 
 /********************************* User Resume Page ******************************/
 
-router.get('/resume', tokenAuth.requireToken, function (req, res, next) {
-    res.render('user_resume', {uid: req.user.uid});
+router.get('/profile/:uid/resume', function (req, res, next) {
+    res.render('user_resume', {uid: req.params.uid});
 });
 
 router.get('/resume/data', tokenAuth.requireToken, function (req, res, next) {
@@ -291,7 +289,6 @@ router.post('/resume/upload', tokenAuth.requireToken, function(req, res, next) {
         if (err) throw err;
         else res.send('success');
     });
-
 });
 
 router.get('/resume/aws/data', tokenAuth.requireToken, function (req, res, next) {
@@ -308,7 +305,7 @@ router.post('/resume/delete', tokenAuth.requireToken, function (req, res, next) 
                 type: 'resume',
                 id: req.body.rid
             }, function (error, response) {
-                if (error) throw error;
+                if (error) throw error
                 else res.send('success');
             });
         }
@@ -318,7 +315,6 @@ router.post('/resume/delete', tokenAuth.requireToken, function (req, res, next) 
 //share resume
 router.post('/resume/share', tokenAuth.requireToken, function (req, res, next) {
     var link = req.headers.host + "/resume/" + req.body.rid;
-    console.log(link);
     Resume.update({rid: req.body.rid}, {$set: {
         link: link,
         subject: req.body.subject,

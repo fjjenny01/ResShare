@@ -1,5 +1,5 @@
 AWS.config.update({accessKeyId: '', secretAccessKey: ''});
-AWS.config.region = 'us-east-1';
+AWS.config.region = '';
 var bucket = new AWS.S3({params: {Bucket: 'czcbucket/avatars', ACL:'public-read'}});
 console.log(bucket);
 //bucket.listObjects(function (err, data) {console.log(err); console.log(data)});
@@ -53,11 +53,11 @@ $.ajax({
 
 
 //console.log(m);
-document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification?access_token="+localStorage.getItem("ResToken");
-document.getElementById("link-resume").href = "/user/resume/?access_token="+localStorage.getItem("ResToken");
+document.getElementById("link-info").href = "/user/profile/"+glb_uid+"/info";
+document.getElementById("link-admin").href = "/user/profile/"+glb_uid+"/admin";
+document.getElementById("link-topics").href = "/user/profile/"+glb_uid+"/topic";
+document.getElementById("link-notification").href = "/user/profile/"+glb_uid+"/notification";
+document.getElementById("link-resume").href = "/user/profile/" + glb_uid + "/resume";
 
 //Check self
 function remove(id) {
@@ -72,7 +72,7 @@ if (self == false){
 }
 
 //redirect to my home page link
-var my_homepage_url =  "/user?access_token="+ localStorage.getItem("ResToken")
+var my_homepage_url =  "/user";
 document.getElementById("myhome_page_link").href = my_homepage_url
 document.getElementById("name_page").href = my_homepage_url
 
@@ -104,7 +104,7 @@ function loadEvents(res_list){
         img.src = res_list[i]["avatar"]["url"];
         var aimg = document.createElement("a");
         console.log(res_list[i].uid);
-        aimg.href = "/user/profile/"+res_list[i].uid+"/info?access_token="+localStorage.getItem("ResToken");
+        aimg.href = "/user/profile/"+res_list[i].uid+"/info";
         aimg.appendChild(img);
         var fstLine = document.createElement("div");
         var usr = document.createElement("h5");
